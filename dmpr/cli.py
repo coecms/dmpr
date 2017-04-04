@@ -15,10 +15,46 @@
 # limitations under the License.
 from __future__ import print_function
 import click
+from .model import identify_model, model_from_name
 
 @click.group()
 def main():
     """
     ARCCSS Data Publication Tools
+    """
+    pass
+
+@main.command()
+@click.option('-r','--rundir', prompt=True)
+@click.option('-m','--model')
+@click.option('--dmp')
+@click.argument('file', nargs=-1)
+def post(dmp, model, rundir, file):
+    """
+    Post-process climate data files
+
+    If model is not specified it will be determined from the run directory
+    """
+    
+    # Identify the model type
+    if model is not None:
+        m = model_from_name(model)
+    else:
+        m = identify_model(rundir)
+    m.read_configs(rundir)
+
+    # Register the DMP if present
+    if dmp is not None:
+        m.set_dmp(dmp)
+
+    # Process the files
+    for f in file:
+        newfile = m.post(f)
+        print(newfile)
+
+@main.command()
+def stage():
+    """
+    Stage a run for publication, checking metadata and moving to ua8
     """
     pass
