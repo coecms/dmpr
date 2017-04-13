@@ -8,8 +8,8 @@ ARCCSS Data Publication Tool
   :target: https://readthedocs.org/projects/dmpr/?badge=latest
 .. image:: https://travis-ci.org/ScottWales/dmpr.svg?branch=master
   :target: https://travis-ci.org/ScottWales/dmpr
-.. image:: https://circleci.com/gh/coecms/ARCCSSive.svg?style=shield
-  :target: https://circleci.com/gh/coecms/ARCCSSive
+.. image:: https://circleci.com/gh/ScottWales/dmpr.svg?style=shield
+  :target: https://circleci.com/gh/ScottWales/dmpr
 .. image:: http://codecov.io/github/ScottWales/dmpr/coverage.svg?branch=master
   :target: http://codecov.io/github/ScottWales/dmpr?branch=master
 .. image:: https://landscape.io/github/ScottWales/dmpr/master/landscape.svg?style=flat
@@ -18,8 +18,6 @@ ARCCSS Data Publication Tool
   :target: https://codeclimate.com/github/ScottWales/dmpr
 .. image:: https://badge.fury.io/py/dmpr.svg
   :target: https://pypi.python.org/pypi/dmpr
-.. image:: https://circleci.com/gh/ScottWales/dmpr.svg?style=svg
-  :target: https://circleci.com/gh/ScottWales/dmpr
 
 .. content-marker-for-sphinx
 
