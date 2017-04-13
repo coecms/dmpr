@@ -33,6 +33,18 @@ Pip install (into a virtual environment)::
 
     pip install dmpr
 
+---
+Use
+---
+
+Get help::
+
+    dmpr --help
+
+Post process a model run::
+
+    dmpr post --rundir /path/to/configs output1 output2
+
 -------
 Develop
 -------
