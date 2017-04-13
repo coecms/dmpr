@@ -13,7 +13,7 @@ install:
 
     - conda config --set always_yes yes --set changeps1 no
     - conda create -n travis python=$TRAVIS_PYTHON_VERSION
-    - conda env update -n travis -f conda/dev-environment
+    - conda env update -n travis -f conda/dev-environment.yml
     - source activate travis
 
     - pip install --upgrade pytest coverage codecov
