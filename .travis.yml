@@ -22,6 +22,9 @@ script:
     - coverage run --source dmpr -m py.test
 after_success:
     - codecov
+addons:
+    code_climate:
+        repo_token: d94e3f649c0b1dc183aee900b4c3f31a13c38b98adcfd330c068f0e8ebb780cd
 # deploy:
 #   provider: pypi
 #   user:
@@ -31,7 +34,3 @@ after_success:
 #     tags: true
 #     repo: ScottWales/dmpr
 #   distributions: "sdist bdist_wheel"
-addons:
-    code_climate:
-        repo_token:
-            secure: "obwQt15s2ALweyEkbfT+QCDtxRw4juO/G3SV2b2at7wOf2zFooaf6LEW5lxu32ls9p7jdLXl6thiibvKc6HyJLQyS2wHZ6vgilGZHD+g5q+Um8FKMPC11JI5u3j1HSVkKKvgPHWjPA6MGGiSZc11DY/MCIvuNJOjR5735PnQk2Ff4C19k5kAVV0J+XPW5gFaIatDSI1PkBfknLrn7JgHKoohvfCmBpzfAqbk3vxRJnFX9iRcnkk86vm/YEKAmXeDllDFXiOTBZnrY4a6hFY4YFJ96SKayiKxwd3QAbqWE+/ZieGLrd/1clAvTlFTpusqIGFVrn5uvioot2tXytdmOqmiIB8pSzFOvfeELT4K5oh2rHn65mS5LEOd6scy6+RM2uD74sDrYlJBMZd1h6rp1y83foMoQw4qR2AKZ9QjMFh87yK9r6/mfN9GwcmjqtAwCLLe+GrdnE8QRmO5cFzV4PnrP7B4fOtCOTEUtmCoMnQvK2QO1cDM8rqLlF7eqwS9Dy9UctdeydqnABCwHBWOxIzYuxkbnDLLM9BrpB8x+L6XhClh8Agk4HJOpWU0zvCfVxb5oPvU/agK2mckWEWoEMr7NvSrhw1aU2VfGldGAoV/+nmx2eB0hVhPuwYCSeYiP+m2SMsfP0jIC3sSz2mH+OIIkZ1vnJzMZ9RKFy4X+FI="
