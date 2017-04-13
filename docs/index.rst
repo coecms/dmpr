@@ -12,7 +12,7 @@ Contents:
    :maxdepth: 2
 
    readme.rst 
-   api/autoindex.rst
+   design.rst
    api/modules.rst
 
 Indices and tables

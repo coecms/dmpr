@@ -69,13 +69,13 @@ The command-line interface is created using Click. Options are kept simple in
 order to make output consistent between users.
 
 The model is identified either by specifying the name or by reading the files
-in the run directory, using functions in `dmpr.model`.
+in the run directory, using functions in :mod:`dmpr.model`.
 
 ^^^^^^
 models
 ^^^^^^
 
-Each model has its own class, derived from `dmpr.base.Model`. The model must
+Each model has its own class, derived from :class:`dmpr.base.Model`. The model must
 override two functions, `read_configs()` and `post_impl()`, and may optionally
 override `outfile()` to customise the processed file's name.
 
@@ -95,7 +95,7 @@ model run. A DMP may be linked after post-processing using `dmpr stage`.
 dmp
 ^^^
 
-The `dmpr.dmp.DMP` class holds data management plan related metadata, read from
+The :class:`dmpr.dmp.DMP` class holds data management plan related metadata, read from
 the online database. It has an `addmeta()` function to add metadata it reads
 from the database to a file, which gets automatically called by the model's
 `post()` function.

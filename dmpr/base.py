@@ -28,6 +28,7 @@ class Model(object):
         self.user = os.environ.get('USER')
         self.project = os.environ.get('PROJECT')
         self.dmp = None
+        self.file_meta = {}
 
     def read_configs(self, rundir):
         """
@@ -81,3 +82,16 @@ class Model(object):
         Set the current DMP
         """
         self.dmp = DMP(dmp_name)
+
+    def file_meta(self, path, infile):
+        """
+        Add file-level metadata
+        """
+        with netcdf4.Dataset(path, mode="a") as f:
+            f.setncatts(self.run_meta)
+
+            history = f.getncattr('history')
+            history += "%s %s(%s) %s\n"%(datetime.now().isoformat(),
+                    __project_name__, __version__,
+                    infile)
+
