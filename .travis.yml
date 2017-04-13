@@ -16,12 +16,13 @@ install:
     - conda env update -n travis -f conda/dev-environment.yml
     - source activate travis
 
-    - pip install --upgrade pytest coverage codecov
+    - pip install --upgrade pytest coverage codecov codeclimate-test-reporter
     - pip install -r requirements.txt
 script:
     - coverage run --source dmpr -m py.test
 after_success:
     - codecov
+    - codeclimate-test-reporter
 addons:
     code_climate:
         repo_token: d94e3f649c0b1dc183aee900b4c3f31a13c38b98adcfd330c068f0e8ebb780cd
