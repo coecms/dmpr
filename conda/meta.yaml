@@ -19,6 +19,8 @@ requirements:
     run:
         - python
         - six
+        - netcdf4
+        - iris
 
 test:
     source_files:
