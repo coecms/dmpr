@@ -1,6 +1,6 @@
-=============================
+====
 dmpr
-=============================
+====
 
 ARCCSS Data Publication Tool
 
@@ -21,9 +21,9 @@ ARCCSS Data Publication Tool
 
 .. content-marker-for-sphinx
 
----
+-------
 Install
----
+-------
 
 Conda install::
 
@@ -33,9 +33,9 @@ Pip install (into a virtual environment)::
 
     pip install dmpr
 
----
+-------
 Develop
----
+-------
 
 Development install::
 
