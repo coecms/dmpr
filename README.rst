@@ -8,6 +8,8 @@ ARCCSS Data Publication Tool
   :target: https://readthedocs.org/projects/dmpr/?badge=latest
 .. image:: https://travis-ci.org/ScottWales/dmpr.svg?branch=master
   :target: https://travis-ci.org/ScottWales/dmpr
+.. image:: https://circleci.com/gh/coecms/ARCCSSive.svg?style=shield
+  :target: https://circleci.com/gh/coecms/ARCCSSive
 .. image:: http://codecov.io/github/ScottWales/dmpr/coverage.svg?branch=master
   :target: http://codecov.io/github/ScottWales/dmpr?branch=master
 .. image:: https://landscape.io/github/ScottWales/dmpr/master/landscape.svg?style=flat
@@ -16,23 +18,39 @@ ARCCSS Data Publication Tool
   :target: https://codeclimate.com/github/ScottWales/dmpr
 .. image:: https://badge.fury.io/py/dmpr.svg
   :target: https://pypi.python.org/pypi/dmpr
+.. image:: https://circleci.com/gh/ScottWales/dmpr.svg?style=svg
+  :target: https://circleci.com/gh/ScottWales/dmpr
 
 .. content-marker-for-sphinx
 
-------------------
-Build Instructions
-------------------
+---
+Install
+---
+
+Conda install::
+
+    conda install -c ScottWales dmpr
 
 Pip install (into a virtual environment)::
 
     pip install dmpr
 
-or::
-    
-    pip install git+https://github.com/ScottWales/dmpr
+---
+Develop
+---
 
-or (for development)::
+Development install::
 
-    git checkout git+https://github.com/ScottWales/dmpr
+    git checkout https://github.com/ScottWales/dmpr
     cd dmpr
+    conda env create -f conda/dev-environment.yml
+    source activate dmpr-dev
     pip install -e '.[dev]'
+
+Run tests::
+
+    py.test
+
+Build documentation::
+
+    python setup.py build_sphinx
