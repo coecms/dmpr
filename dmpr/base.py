@@ -29,6 +29,7 @@ class Model(object):
         self.project = os.environ.get('PROJECT')
         self.dmp = None
         self.file_meta = {}
+        self.archivedir = os.path.join('/short',self.project,self.user,'dmp')
 
     def read_configs(self, rundir):
         """
@@ -37,17 +38,7 @@ class Model(object):
         raise NotImplementedError('To be overridden by the model class')
 
     def outdir(self):
-        """
-        Returns the output directory
-
-        >>> m = Model()
-        >>> m.user = 'user'
-        >>> m.project = 'w35'
-        >>> m.runid = 'foo'
-        >>> m.outdir()
-        '/short/w35/user/dmp/foo'
-        """
-        return os.path.join('/short',self.project,self.user,'dmp',self.runid)
+        return os.path.join(self.archivedir, self.runid)
 
     def outfile(self, infile):
         """
@@ -62,7 +53,14 @@ class Model(object):
         """
         Post-process a file and add metadata from the DMP, returning the processed file name
         """
-        outfile = os.path.join(self.outdir(), self.outfile())
+        outdir = self.outdir()
+
+        try:
+            os.makedirs(outdir)
+        except OSError:
+            pass
+
+        outfile = os.path.join(outdir, self.outfile(infile))
         self.post_impl(infile, outfile)
 
         # Add DMP metadata

@@ -9,3 +9,5 @@ dependencies:
     - pbr
     - netcdf4
     - iris
+    - sphinx
+    - pytest

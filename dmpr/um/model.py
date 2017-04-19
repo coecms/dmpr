@@ -17,6 +17,7 @@ from __future__ import print_function
 from ..base import Model
 import iris
 import iris.fileformats.netcdf
+import os
 
 class UM(Model):
     """
