@@ -51,7 +51,7 @@ Develop
 
 Development install::
 
-    git checkout https://github.com/ScottWales/dmpr
+    git clone https://github.com/ScottWales/dmpr
     cd dmpr
     conda env create -f conda/dev-environment.yml
     source activate dmpr-dev
