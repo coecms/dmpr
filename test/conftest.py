@@ -26,11 +26,9 @@ def cfchecker():
     Will skip the entire test if cfchecker is not available
     """
     cfchecks = pytest.importorskip('cfchecker.cfchecks')
-    checker = cfchecks.CFChecker()
+    checker = cfchecks.CFChecker(
+            cfStandardNamesXML=cfchecks.STANDARDNAME,
+            cfAreaTypesXML=cfchecks.AREATYPES,
+            version=None,
+            )
     yield checker
-    print(checker.all_messages)
-    totals = inst.get_total_counts()
-    assert totals['FATAL'] == 0
-    assert totals['ERROR'] == 0
-    assert totals['WARN'] == 0
-

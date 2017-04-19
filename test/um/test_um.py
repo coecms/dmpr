@@ -39,5 +39,5 @@ def test_cfcheck(tmpdir, cfchecker):
     infile = '/short/w35/saw562/UM_ROUTDIR/saw562/vatad/vatada_pa000'
     outfile = model.post(infile)
 
-    cfchecker.checker(outfile)
+    assert cfchecker.checker(outfile) == 0
 

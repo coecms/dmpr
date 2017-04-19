@@ -3,4 +3,5 @@
 click
 netcdf4
 iris
+cdat-lite;python_version<'3.0'
 git+https://github.com/cedadev/cf-checker@3.0.0#egg=cfchecker;python_version<'3.0'
