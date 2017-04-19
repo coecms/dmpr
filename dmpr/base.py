@@ -17,6 +17,7 @@ from __future__ import print_function
 
 import os
 import os.path
+import netCDF4
 from .dmp import DMP
 
 class Model(object):
@@ -29,6 +30,7 @@ class Model(object):
         self.project = os.environ.get('PROJECT')
         self.dmp = None
         self.file_meta = {}
+        self.attr_prefix = __project_name__
         self.archivedir = os.path.join('/short',self.project,self.user,'dmp')
 
     def read_configs(self, rundir):
@@ -38,6 +40,9 @@ class Model(object):
         raise NotImplementedError('To be overridden by the model class')
 
     def outdir(self):
+        """
+        Returns the output directory for this model run
+        """
         return os.path.join(self.archivedir, self.runid)
 
     def outfile(self, infile):
@@ -67,6 +72,9 @@ class Model(object):
         if self.dmp is not None:
             self.dmp.addmeta(outfile)
 
+        # Add file-level metadata
+        self.addmeta(infile, outfile)
+
         return outfile
 
     def post_impl(self, infile, outfile):
@@ -81,15 +89,16 @@ class Model(object):
         """
         self.dmp = DMP(dmp_name)
 
-    def file_meta(self, path, infile):
+    def addmeta(self, infile, outfile):
         """
         Add file-level metadata
         """
-        with netcdf4.Dataset(path, mode="a") as f:
+        with netCDF4.Dataset(outfile, mode="a") as f:
             f.setncatts(self.run_meta)
 
             history = f.getncattr('history')
-            history += "%s %s(%s) %s\n"%(datetime.now().isoformat(),
+            history += "%s %s(%s) post %s\n"%(datetime.now().isoformat(),
                     __project_name__, __version__,
                     infile)
+            f.setncattr('history', history)
 

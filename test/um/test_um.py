@@ -21,6 +21,9 @@ from dmpr.um.model import *
 from dmpr.model import identify_model
 
 import os
+import netCDF4
+import pytest
+
 sample = os.path.join(os.path.dirname(os.path.realpath(__file__)),'sample')
 
 def test_identify_model():
@@ -31,13 +34,25 @@ def test_read_config():
     model.read_configs(sample)
     assert model.runid == 'abcde'
 
-def test_cfcheck(tmpdir, cfchecker):
+@pytest.fixture(scope='module')
+def sample_out(tmpdir_factory):
+    """
+    Returns a processed output file
+    """
     model = UM()
     model.read_configs(sample)
-    model.archivedir = str(tmpdir)
+    model.archivedir = str(tmpdir_factory.mktemp('um'))
 
     infile = '/short/w35/saw562/UM_ROUTDIR/saw562/vatad/vatada_pa000'
     outfile = model.post(infile)
+    return outfile
 
-    assert cfchecker.checker(outfile) == 0
+def test_metadata(sample_out):
+    with netCDF4.Dataset(sample_out) as d:
+        # There is a history present
+        assert d.get('history') is not None
+
+def test_cfcheck(sample_out, cfchecker):
+    # Output is CF compliant
+    assert cfchecker.checker(sample_out) == 0
 
