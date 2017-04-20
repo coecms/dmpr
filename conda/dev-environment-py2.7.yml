@@ -1,0 +1,8 @@
+name: dmpr-dev
+
+channels:
+    - conda-forge
+    - defaults
+
+dependencies:
+    - cfchecker
