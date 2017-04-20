@@ -18,6 +18,7 @@ from __future__ import print_function
 import os
 import os.path
 import netCDF4
+import sys
 from .dmp import DMP
 
 class Model(object):
@@ -30,7 +31,7 @@ class Model(object):
         self.project = os.environ.get('PROJECT')
         self.dmp = None
         self.file_meta = {}
-        self.attr_prefix = __project_name__
+        self.attr_prefix = 'dmpr.'
         self.archivedir = os.path.join('/short',self.project,self.user,'dmp')
 
     def read_configs(self, rundir):
@@ -98,7 +99,7 @@ class Model(object):
 
             history = f.getncattr('history')
             history += "%s %s(%s) post %s\n"%(datetime.now().isoformat(),
-                    __project_name__, __version__,
+                    sys.argv[0], __version__,
                     infile)
             f.setncattr('history', history)
 

@@ -21,6 +21,7 @@ requirements:
         - six
         - netcdf4
         - iris
+        - cfchecker # [py27]
 
 test:
     source_files:
