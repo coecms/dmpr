@@ -43,7 +43,7 @@ def sample_out(tmpdir_factory):
     model.read_configs(sample)
     model.archivedir = str(tmpdir_factory.mktemp('um'))
 
-    infile = '/short/w35/saw562/UM_ROUTDIR/saw562/vatad/vatada_pa000'
+    infile = os.path.join(sample, 'abcdea_da000')
     outfile = model.post(infile)
     return outfile
 
