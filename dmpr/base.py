@@ -72,7 +72,7 @@ class Model(object):
 
         :param str infile: Filename of the input file as passed to ``dmpr post``
 
-        >>> Model().outfile('/path/to/foo.nc')
+        >>> Model().out_filename('/path/to/foo.nc')
         'foo.nc'
         """
         return os.path.basename(infile)
@@ -88,14 +88,14 @@ class Model(object):
         :return: Path to the processed output file
         :rtype: str
         """
-        outdir = self.outdir()
+        outdir = self.out_dir()
 
         try:
             os.makedirs(outdir)
         except OSError:
             pass
 
-        outfile = os.path.join(out_dir, self.out_filename(infile))
+        outfile = os.path.join(outdir, self.out_filename(infile))
         self.post_impl(infile, outfile)
 
         # Add DMP metadata
