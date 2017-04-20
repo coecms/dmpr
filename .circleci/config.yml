@@ -9,6 +9,7 @@ jobs:
             - run: |
                 /opt/docker/bin/entrypoint /bin/bash << EOF
                 conda config --add channels conda-forge
+                conda config --add channels ScottWales
                 conda update conda conda-build
                 EOF
             - run: |
