@@ -18,6 +18,7 @@ from ..base import Model
 import iris
 import iris.fileformats.netcdf
 import os
+import re
 
 class UM(Model):
     """
@@ -30,9 +31,18 @@ class UM(Model):
 
     def read_configs(self, rundir):
         """
-        TODO: Get runid from namelist
+        Read the UM namelists and set up metadata
         """
         self.runid = 'unknown'
+
+        runid_re = re.compile('^\s*RUNID=(.*)$')
+
+        with open(os.path.join(rundir, 'SUBMIT')) as f:
+            for line in f:
+                m = runid_re.match(line)
+                if m is not None:
+                    self.runid = m.group(1)
+
 
     def outfile(self, infile):
         """
