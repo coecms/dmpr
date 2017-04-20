@@ -19,6 +19,7 @@ import iris
 import iris.fileformats.netcdf
 import os
 import re
+import netCDF4
 
 class UM(Model):
     """
@@ -54,3 +55,9 @@ class UM(Model):
         """
         cubes = iris.load(infile)
         iris.fileformats.netcdf.save(cubes, outfile)
+
+        # Cleanup CF compliance
+        with netCDF4.Dataset(outfile, mode="a") as d:
+            if 'level_height' in d.variables:
+                v = d.variables['level_height']
+                v.delncattr('axis')
