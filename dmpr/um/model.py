@@ -43,7 +43,7 @@ class UM(Model):
                     self.run_meta['runid'] = m.group(1)
 
 
-    def outfile(self, infile):
+    def out_filename(self, infile):
         """
         TODO: Decode UM file name
         """

@@ -13,8 +13,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from __future__ import print_function
 
+"""
+Abstract base classes used by the actual models
+"""
+
+from __future__ import print_function
 import os
 import os.path
 import netCDF4
@@ -26,6 +30,16 @@ from dmpr import __version__
 class Model(object):
     """
     Base class of model processors
+
+    .. py:attribute:: run_meta
+
+        Dictionary for extra metadata to be added to the output file.
+        ``run_meta['runid']`` is used to determine the output path
+
+    .. py:attribute:: dmp
+
+        :py:class:`~dmpr.dmp.DMP` attached to this model (may be ``None`` if
+        not known yet)
     """
 
     def __init__(self):
@@ -39,18 +53,24 @@ class Model(object):
     def read_configs(self, rundir):
         """
         Read the run configuration, setting up run-based metadata
+
+        To be overridden by model classes
         """
         raise NotImplementedError('To be overridden by the model class')
 
-    def outdir(self):
+    def out_dir(self):
         """
         Returns the output directory for this model run
         """
         return os.path.join(self.archivedir, self.run_meta['runid'])
 
-    def outfile(self, infile):
+    def out_filename(self, infile):
         """
         Returns the base output filename
+
+        May be overriden by the model class
+
+        :param str infile: Filename of the input file as passed to ``dmpr post``
 
         >>> Model().outfile('/path/to/foo.nc')
         'foo.nc'
@@ -59,7 +79,14 @@ class Model(object):
 
     def post(self, infile):
         """
-        Post-process a file and add metadata from the DMP, returning the processed file name
+        Post-process a file and add metadata from the DMP
+
+        Calls :py:meth:`~Model.post_impl()` to do the main processing, which
+        gets overridden by model classes.
+
+        :param str infile: Filename of the input file
+        :return: Path to the processed output file
+        :rtype: str
         """
         outdir = self.outdir()
 
@@ -68,7 +95,7 @@ class Model(object):
         except OSError:
             pass
 
-        outfile = os.path.join(outdir, self.outfile(infile))
+        outfile = os.path.join(out_dir, self.out_filename(infile))
         self.post_impl(infile, outfile)
 
         # Add DMP metadata
@@ -82,19 +109,32 @@ class Model(object):
 
     def post_impl(self, infile, outfile):
         """
-        Post-processing implementation, overrided
+        Post-processing implementation
+
+        Must be overridden by the model class
+
+        :param str infile: Filename of the input file
+        :param str outfile: Filename of the output file (created by this function)
         """
         raise NotImplementedError('To be overridden by the model class')
 
     def set_dmp(self, dmp_name):
         """
-        Set the current DMP
+        Set the Data Management Plan for this model run
+
+        Creates a :py:class:`~dmpr.dmp.DMP` and attaches it to the model
+
+        :param str dmp_name: Name of the DMP
         """
         self.dmp = DMP(dmp_name)
 
     def addmeta(self, infile, outfile):
         """
-        Add file-level metadata
+        Add file-level metadata to the processed file, including history and
+        anything added to the dictionary :py:attr:`Model.run_meta`.
+
+        :param str infile: Filename of the input file
+        :param str outfile: Filename of the output file
         """
         with netCDF4.Dataset(outfile, mode="a") as f:
             f.setncatts(self.run_meta)
