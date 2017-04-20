@@ -32,7 +32,7 @@ def test_identify_model():
 def test_read_config():
     model = UM()
     model.read_configs(sample)
-    assert model.runid == 'abcde'
+    assert model.run_meta['runid'] == 'abcde'
 
 @pytest.fixture(scope='module')
 def sample_out(tmpdir_factory):
@@ -50,7 +50,7 @@ def sample_out(tmpdir_factory):
 def test_metadata(sample_out):
     with netCDF4.Dataset(sample_out) as d:
         # There is a history present
-        assert d.get('history') is not None
+        assert d.getncattr('history') is not None
 
 def test_cfcheck(sample_out, cfchecker):
     # Output is CF compliant

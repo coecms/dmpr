@@ -19,7 +19,9 @@ import os
 import os.path
 import netCDF4
 import sys
+from datetime import datetime
 from .dmp import DMP
+from dmpr import __version__
 
 class Model(object):
     """
@@ -30,7 +32,7 @@ class Model(object):
         self.user = os.environ.get('USER', 'unknown')
         self.project = os.environ.get('PROJECT', 'unknown')
         self.dmp = None
-        self.file_meta = {}
+        self.run_meta = {}
         self.attr_prefix = 'dmpr.'
         self.archivedir = os.path.join('/short',self.project,self.user,'dmp')
 
@@ -44,7 +46,7 @@ class Model(object):
         """
         Returns the output directory for this model run
         """
-        return os.path.join(self.archivedir, self.runid)
+        return os.path.join(self.archivedir, self.run_meta['runid'])
 
     def outfile(self, infile):
         """
@@ -97,7 +99,10 @@ class Model(object):
         with netCDF4.Dataset(outfile, mode="a") as f:
             f.setncatts(self.run_meta)
 
-            history = f.getncattr('history')
+            try:
+                history = f.getncattr('history')
+            except AttributeError:
+                history = ""
             history += "%s %s(%s) post %s\n"%(datetime.now().isoformat(),
                     sys.argv[0], __version__,
                     infile)

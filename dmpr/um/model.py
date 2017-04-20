@@ -33,15 +33,13 @@ class UM(Model):
         """
         Read the UM namelists and set up metadata
         """
-        self.runid = 'unknown'
-
         runid_re = re.compile('^\s*RUNID=(.*)$')
 
         with open(os.path.join(rundir, 'SUBMIT')) as f:
             for line in f:
                 m = runid_re.match(line)
                 if m is not None:
-                    self.runid = m.group(1)
+                    self.run_meta['runid'] = m.group(1)
 
 
     def outfile(self, infile):
