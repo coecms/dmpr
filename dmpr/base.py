@@ -27,8 +27,8 @@ class Model(object):
     """
 
     def __init__(self):
-        self.user = os.environ.get('USER')
-        self.project = os.environ.get('PROJECT')
+        self.user = os.environ.get('USER', 'unknown')
+        self.project = os.environ.get('PROJECT', 'unknown')
         self.dmp = None
         self.file_meta = {}
         self.attr_prefix = 'dmpr.'
