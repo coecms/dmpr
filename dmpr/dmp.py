@@ -204,7 +204,7 @@ def list(server, email, password):
 @click.option('--server', default = default_server)
 @click.option('--email', prompt=True)
 @click.password_option(confirmation_prompt=False)
-@click.option('-o','--output', type=click.Path(file_ok=False))
+@click.option('-o','--output', type=click.Path(file_okay=False))
 @click.option('--format', type=click.Choice(['json', 'xml', 'text', 'csv', 'pdf', 'docx']))
 @click.argument('id', nargs=-1)
 def export(server, email, password, output, format, id):
