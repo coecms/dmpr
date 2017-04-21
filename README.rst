@@ -45,6 +45,14 @@ Post process a model run::
 
     dmpr post --rundir /path/to/configs output1 output2
 
+List registered data management plans::
+
+    dmpr dmp list
+
+Export data management plan 51::
+
+    dmpr dmp export --format=json 51
+
 -------
 Develop
 -------

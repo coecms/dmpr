@@ -54,6 +54,15 @@ class DMPServer(object):
             self._projects_cache = [Project(self, p) for p in r.json()]
         return self._projects_cache
 
+    def project(self, id):
+        """
+        Get a single project given the ID
+
+        :param id: Project ID
+        """
+        r = self.get('projects/%s.json'%id)
+        return Project(self, r.json())
+
     def _post(self, url, **kwargs):
         fullurl = urljoin(self.server, url)
         r = self.session.post(fullurl, **kwargs)
@@ -89,6 +98,7 @@ class Project(object):
         self.server = server
         # Set attributes automatically from the Json
         [setattr(self, k, v) for k, v in six.iteritems(json)]
+        self.json = json
 
     def __str__(self):
         return self.title
@@ -104,30 +114,40 @@ class Project(object):
     def url(self):
         return urljoin(self.server.server, self.url_path)
 
-    def _scrape(self):
-        """
-        Scrape the project page into beautifulsoup
-        """
-        r = self.server._get(self.url_path)
-        soup = BeautifulSoup(r.text, 'html.parser')
-        return soup
-
-    def plans(self):
+    def plan_urls(self):
         """
         Returns the plans attached to this project as a dictionary
         """
-        soup = self._scrape()
         _plans = {}
 
         # Get the tab links
+        r = self.server._get(self.url_path)
+        soup = BeautifulSoup(r.text, 'html.parser')
         links = soup.find(id='project-tabs').find_all('a')
+
+        # Get the plan URLs
         for link in links:
             match = plan_re.match(link.href)
             if match is not None:
                 plan_id = match.groupdict()['plan_id']
-                r = self.server.get('%s/plans/%s/export'%(self.url_path, plan_id), data={'format': 'json'})
-                _plans[link.text] = r.json
+                _plans[link.text] = '%s/plans/%s'%(self.url_path, plan_id)
+        return _plans
 
+    def export_plans(form):
+        """
+        Export this project's plans
+
+        :param str form: Output format
+        """
+        urls = self.plan_urls()
+        _plans = {}
+
+        for k, v in six.iteritems(urls):
+            if form in ['json', 'xml', 'text', 'csv']:
+                _plans[k] = self.server._get('%s/export'%v, data={'format': form}).text
+            else:
+                _plans[k] = self.server._get('%s/export'%v, data={'format': form}).content
+        return _plans
 
 class DMP(object):
     """
@@ -171,11 +191,52 @@ def dmpcli():
 @click.password_option(confirmation_prompt=False)
 def list(server, email, password):
     """
-    List available DMPs
+    List available DMPs::
+
+        click list
     """
     s = DMPServer(server)
     s.login(email, password)
     table = [[project.id, project.title, project.url] for project in s.projects()]
     print(tabulate(table, headers=['ID', 'Title', 'URL']))
 
+@dmpcli.command()
+@click.option('--server', default = default_server)
+@click.option('--email', prompt=True)
+@click.password_option(confirmation_prompt=False)
+@click.option('-o','--output', type=click.Path(file_ok=False))
+@click.option('--format', type=click.Choice(['json', 'xml', 'text', 'csv', 'pdf', 'docx']))
+@click.argument('id', nargs=-1)
+def export(server, email, password, output, format, id):
+    """
+    Export a DMP to a directory, either by ID number or URL slug::
+
+        click export --output my-dmp 51
+        click export --output my-dmp test-plan-9000
+    """
+    try:
+        os.mkdir(output)
+    except OSError:
+        pass
+
+    s = DMPServer(server)
+    s.login(email, password)
+
+    for i in id:
+        p = s.project(i)
+
+        # Export the project
+        with open('project.json', 'w') as f:
+            json.dump(f.json, f, indent=4)
+
+        # Export plans
+        plans = p.export_plans(form=format)
+        for k, v in six.iteritems(plans):
+            out = k.replace(' ','_') + '.' + format
+            if format in ['pdf', 'docx']:
+                mode = 'wb'
+            else:
+                mode = 'w'
+            with open(out, mode) as f:
+                f.write(v)
 
