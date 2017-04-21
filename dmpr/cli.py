@@ -16,6 +16,7 @@
 from __future__ import print_function
 import click
 from .model import identify_model, model_from_name
+from .dmp import dmpcli
 
 @click.group()
 def main():
@@ -58,3 +59,5 @@ def stage():
     Stage a run for publication, checking metadata and moving to ua8
     """
     pass
+
+main.add_command(dmpcli)

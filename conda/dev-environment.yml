@@ -11,3 +11,5 @@ dependencies:
     - iris
     - sphinx
     - pytest
+    - beautifulsoup4
+    - tabulate

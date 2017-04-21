@@ -17,7 +17,10 @@ from __future__ import print_function
 import requests
 import six
 from six.moves.urllib.parse import urljoin
-
+from bs4 import BeautifulSoup
+import re
+import click
+from tabulate import tabulate
 
 default_server = 'http://dmp.climate-cms.org:3000'
 
@@ -27,15 +30,20 @@ class DMPServer(object):
     """
     def __init__(self, server = default_server):
         self.server = server
-        self.cookies = requests.cookies.RequestsCookieJar()
         self._projects_cache = None
+        self.session = requests.Session()
 
     def login(self, email, password):
         """
         Log in to DMPOnline
         """
-        self._post(data={'email': email, 'password': password})
-        self.cookies.update(r.cookies)
+        r = self._get('users/sign_in')
+        soup = BeautifulSoup(r.text, 'html.parser')
+        token = soup.find('input', attrs={'name':'authenticity_token'})['value']
+        r = self._post('users/sign_in', 
+                data={'user[email]': email,
+                    'user[password]': password,
+                    'authenticity_token': token})
 
     def projects(self):
         """
@@ -48,15 +56,27 @@ class DMPServer(object):
 
     def _post(self, url, **kwargs):
         fullurl = urljoin(self.server, url)
-        r = requests.post(fullurl, cookies=self.cookies, **kwargs)
-        r.raise_for_status()
+        r = self.session.post(fullurl, **kwargs)
+        try:
+            r.raise_for_status()
+        except requests.HTTPError:
+            print(r.headers)
+            raise
+
         return r
 
     def _get(self, url, **kwargs):
         fullurl = urljoin(self.server, url)
-        r = requests.get(fullurl, cookies=self.cookies, **kwargs)
-        r.raise_for_status()
+        r = self.session.get(fullurl, **kwargs)
+        try:
+            r.raise_for_status()
+        except requests.HTTPError:
+            print(r.request.headers)
+            print(r.headers)
+            raise
         return r
+
+plan_re = re.compile('.*/projects/(?P<project_id>[^/]+)/plans/(?P<plan_id>[^/]+)/edit$')
 
 class Project(object):
     """
@@ -77,8 +97,37 @@ class Project(object):
         return '<%s>'%self.url
 
     @property
+    def url_path(self):
+        return 'projects/%s'%self.slug
+
+    @property
     def url(self):
-        return urljoin(self.server.server, 'projects/%s'%self.slug)
+        return urljoin(self.server.server, self.url_path)
+
+    def _scrape(self):
+        """
+        Scrape the project page into beautifulsoup
+        """
+        r = self.server._get(self.url_path)
+        soup = BeautifulSoup(r.text, 'html.parser')
+        return soup
+
+    def plans(self):
+        """
+        Returns the plans attached to this project as a dictionary
+        """
+        soup = self._scrape()
+        _plans = {}
+
+        # Get the tab links
+        links = soup.find(id='project-tabs').find_all('a')
+        for link in links:
+            match = plan_re.match(link.href)
+            if match is not None:
+                plan_id = match.groupdict()['plan_id']
+                r = self.server.get('%s/plans/%s/export'%(self.url_path, plan_id), data={'format': 'json'})
+                _plans[link.text] = r.json
+
 
 class DMP(object):
     """
@@ -108,5 +157,25 @@ class DMP(object):
             meta['grant_number'] = self.project.grant_number
 
         return meta
+
+@click.group(name='dmp')
+def dmpcli():
+    """
+    Commands for working with Data Management Plans
+    """
+    pass
+
+@dmpcli.command()
+@click.option('--server', default = default_server)
+@click.option('--email', prompt=True)
+@click.password_option(confirmation_prompt=False)
+def list(server, email, password):
+    """
+    List available DMPs
+    """
+    s = DMPServer(server)
+    s.login(email, password)
+    table = [[project.id, project.title, project.url] for project in s.projects()]
+    print(tabulate(table, headers=['ID', 'Title', 'URL']))
 
 

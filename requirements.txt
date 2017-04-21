@@ -5,3 +5,5 @@ netcdf4
 iris
 six
 requests
+beautifulsoup4
+tabulate
