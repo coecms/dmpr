@@ -23,6 +23,7 @@ import os
 import os.path
 import netCDF4
 import sys
+import platform
 from datetime import datetime
 from .dmp import DMP
 from dmpr import __version__
@@ -77,7 +78,7 @@ class Model(object):
         """
         return os.path.basename(infile)
 
-    def post(self, infile):
+    def post(self, infile, outfile=None):
         """
         Post-process a file and add metadata from the DMP
 
@@ -85,6 +86,7 @@ class Model(object):
         gets overridden by model classes.
 
         :param str infile: Filename of the input file
+        :param str outfile: Filename of the output file (defaults to :py:func:`~dmpr.base.Model.out_filename()`)
         :return: Path to the processed output file
         :rtype: str
         """
@@ -95,15 +97,13 @@ class Model(object):
         except OSError:
             pass
 
-        outfile = os.path.join(outdir, self.out_filename(infile))
+        if outfile is None:
+            outfile = self.out_filename(infile)
+
+        outfile = os.path.join(outdir, outfile)
         self.post_impl(infile, outfile)
 
-        # Add DMP metadata
-        if self.dmp is not None:
-            self.dmp.addmeta(outfile)
-
-        # Add file-level metadata
-        self.addmeta(infile, outfile)
+        self.add_meta(infile, outfile)
 
         return outfile
 
@@ -118,17 +118,7 @@ class Model(object):
         """
         raise NotImplementedError('To be overridden by the model class')
 
-    def set_dmp(self, dmp_name):
-        """
-        Set the Data Management Plan for this model run
-
-        Creates a :py:class:`~dmpr.dmp.DMP` and attaches it to the model
-
-        :param str dmp_name: Name of the DMP
-        """
-        self.dmp = DMP(dmp_name)
-
-    def addmeta(self, infile, outfile):
+    def add_meta(self, infile, outfile):
         """
         Add file-level metadata to the processed file, including history and
         anything added to the dictionary :py:attr:`Model.run_meta`.
@@ -137,14 +127,28 @@ class Model(object):
         :param str outfile: Filename of the output file
         """
         with netCDF4.Dataset(outfile, mode="a") as f:
+            if self.dmp is not None:
+                f.setncatts(self.dmp.file_metadata())
+
             f.setncatts(self.run_meta)
 
-            try:
-                history = f.getncattr('history')
-            except AttributeError:
-                history = ""
-            history += "%s %s(%s) post %s\n"%(datetime.now().isoformat(),
-                    sys.argv[0], __version__,
-                    infile)
-            f.setncattr('history', history)
+            add_history(f, infile)
+
+def add_history(dataset, infile):
+    """
+    Add history information to a dataset
+
+    :param netCDF4.Dataset dataset: Dataset to modify
+    :param str infile: Filename of the input file
+    """
+    try:
+        history = dataset.getncattr('history')
+    except AttributeError:
+        history = ""
+    history += "%s %s:%s(%s) post %s\n"%(
+            datetime.now().isoformat(),
+            platform.node(),
+            sys.argv[0], __version__,
+            infile)
+    dataset.setncattr('history', history)
 

@@ -18,7 +18,7 @@ limitations under the License.
 """
 import pytest
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def cfchecker():
     """
     Makes the CEDA CF Checker available for tests
@@ -32,3 +32,15 @@ def cfchecker():
             version=None,
             )
     yield checker
+
+@pytest.fixture(scope='session')
+def dmp():
+    """
+    A sample DMP for testing post-processing
+    """
+    import dmpr.dmp
+    import json
+    server = dmpr.dmp.DMPServer()
+    p = '{"created_at":"2015-03-23T00:49:13Z","data_contact":"","description":"I will be running a ACCESS AMIP simulation over 100 years to look at how ocean temperature correlates with atmospheric temperatures in Melbourne","dmptemplate_id":4,"funder_name":"","grant_number":"","id":39,"identifier":"","locked":null,"note":null,"organisation_id":9,"principal_investigator":"Scott Wales","principal_investigator_identifier":"","slug":"test-plan-9000","title":"Test Plan 9000","updated_at":"2015-03-23T00:51:06Z"}'
+    project = dmpr.dmp.Project(server, json.loads(p))
+    return dmpr.dmp.DMP(project)

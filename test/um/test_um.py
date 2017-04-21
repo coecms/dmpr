@@ -35,13 +35,17 @@ def test_read_config():
     assert model.run_meta['runid'] == 'abcde'
 
 @pytest.fixture(scope='module')
-def sample_out(tmpdir_factory):
+def archivedir(tmpdir_factory):
+    return str(tmpdir_factory.mktemp('um'))
+
+@pytest.fixture(scope='module')
+def sample_out(archivedir):
     """
     Returns a processed output file
     """
     model = UM()
     model.read_configs(sample)
-    model.archivedir = str(tmpdir_factory.mktemp('um'))
+    model.archivedir = archivedir
 
     infile = os.path.join(sample, 'abcdea_da000')
     outfile = model.post(infile)
@@ -56,3 +60,24 @@ def test_cfcheck(sample_out, cfchecker):
     # Output is CF compliant
     assert cfchecker.checker(sample_out) == 0
 
+@pytest.fixture(scope='module')
+def sample_dmp(archivedir, dmp):
+    """
+    Returns a processed output file
+    """
+    model = UM()
+    model.read_configs(sample)
+    model.archivedir = archivedir
+    model.dmp = dmp
+
+    infile = os.path.join(sample, 'abcdea_da000')
+    outfile = model.post(infile, 'abcdea_da000.dmp.nc')
+    return outfile
+
+def test_metadata_dmp(sample_dmp):
+    with netCDF4.Dataset(sample_dmp) as d:
+        assert d.getncattr('data_management_plan') is not None
+
+def test_cfcheck_dmp(sample_dmp, cfchecker):
+    # Output is CF compliant
+    assert cfchecker.checker(sample_dmp) == 0
