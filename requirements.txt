@@ -3,3 +3,5 @@
 click
 netcdf4
 iris
+six
+requests
