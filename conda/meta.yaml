@@ -22,6 +22,9 @@ requirements:
         - netcdf4
         - iris
         - cfchecker # [py27]
+        - requests
+        - beautifulsoup4
+        - tabulate
 
 test:
     source_files:
