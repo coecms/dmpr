@@ -17,6 +17,7 @@ from __future__ import print_function
 import click
 from .model import identify_model, model_from_name
 from .dmp import dmpcli
+from .dmponline import default_server
 
 @click.group()
 def main():
@@ -29,8 +30,9 @@ def main():
 @click.option('-r','--rundir', prompt=True)
 @click.option('-m','--model')
 @click.option('--dmp')
+@click.option('--server', default = default_server)
 @click.argument('file', nargs=-1)
-def post(dmp, model, rundir, file):
+def post(dmp, model, rundir, server, file):
     """
     Post-process climate data files
 
@@ -44,9 +46,9 @@ def post(dmp, model, rundir, file):
         m = identify_model(rundir)
     m.read_configs(rundir)
 
-    # Register the DMP if present
+    # Set the DMP if present
     if dmp is not None:
-        m.set_dmp(dmp)
+        m.run_meta['data-management-plan'] = '%s/projects/%s'%(server, dmp)
 
     # Process the files
     for f in file:
