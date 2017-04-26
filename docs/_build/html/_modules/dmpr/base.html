@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>dmpr.base &#8212; dmpr 0.0.2.dev38 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.2.dev38',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for dmpr.base</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># Copyright 2017 ARC Centre of Excellence for Climate Systems Science</span>
+<span class="c1"># author: Scott Wales &lt;scott.wales@unimelb.edu.au&gt;</span>
+<span class="c1"># </span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1"># </span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1"># </span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Abstract base classes used by the actual models</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">import</span> <span class="nn">netCDF4</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">.dmp</span> <span class="k">import</span> <span class="n">DMP</span>
+<span class="kn">from</span> <span class="nn">dmpr</span> <span class="k">import</span> <span class="n">__version__</span>
+
+<div class="viewcode-block" id="Model"><a class="viewcode-back" href="../../api/dmpr.html#dmpr.base.Model">[docs]</a><span class="k">class</span> <span class="nc">Model</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class of model processors</span>
+
+<span class="sd">    .. py:attribute:: run_meta</span>
+
+<span class="sd">        Dictionary for extra metadata to be added to the output file.</span>
+<span class="sd">        ``run_meta[&#39;runid&#39;]`` is used to determine the output path</span>
+
+<span class="sd">    .. py:attribute:: dmp</span>
+
+<span class="sd">        :py:class:`~dmpr.dmp.DMP` attached to this model (may be ``None`` if</span>
+<span class="sd">        not known yet)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;USER&#39;</span><span class="p">,</span> <span class="s1">&#39;unknown&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PROJECT&#39;</span><span class="p">,</span> <span class="s1">&#39;unknown&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dmp</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_meta</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attr_prefix</span> <span class="o">=</span> <span class="s1">&#39;dmpr.&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">archivedir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;/short&#39;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span><span class="s1">&#39;dmp&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Model.read_configs"><a class="viewcode-back" href="../../api/dmpr.html#dmpr.base.Model.read_configs">[docs]</a>    <span class="k">def</span> <span class="nf">read_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rundir</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read the run configuration, setting up run-based metadata</span>
+
+<span class="sd">        To be overridden by model classes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;To be overridden by the model class&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Model.out_dir"><a class="viewcode-back" href="../../api/dmpr.html#dmpr.base.Model.out_dir">[docs]</a>    <span class="k">def</span> <span class="nf">out_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the output directory for this model run</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">archivedir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_meta</span><span class="p">[</span><span class="s1">&#39;runid&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Model.out_filename"><a class="viewcode-back" href="../../api/dmpr.html#dmpr.base.Model.out_filename">[docs]</a>    <span class="k">def</span> <span class="nf">out_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">infile</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the base output filename</span>
+
+<span class="sd">        May be overriden by the model class</span>
+
+<span class="sd">        :param str infile: Filename of the input file as passed to ``dmpr post``</span>
+
+<span class="sd">        &gt;&gt;&gt; Model().out_filename(&#39;/path/to/foo.nc&#39;)</span>
+<span class="sd">        &#39;foo.nc&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Model.post"><a class="viewcode-back" href="../../api/dmpr.html#dmpr.base.Model.post">[docs]</a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">infile</span><span class="p">,</span> <span class="n">outfile</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Post-process a file and add metadata from the DMP</span>
+
+<span class="sd">        Calls :py:meth:`~Model.post_impl()` to do the main processing, which</span>
+<span class="sd">        gets overridden by model classes.</span>
+
+<span class="sd">        :param str infile: Filename of the input file</span>
+<span class="sd">        :param str outfile: Filename of the output file (defaults to :py:func:`~dmpr.base.Model.out_filename()`)</span>
+<span class="sd">        :return: Path to the processed output file</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">outdir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_dir</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">outdir</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">if</span> <span class="n">outfile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">outfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_filename</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span>
+
+        <span class="n">outfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">post_impl</span><span class="p">(</span><span class="n">infile</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_meta</span><span class="p">(</span><span class="n">infile</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">outfile</span></div>
+
+<div class="viewcode-block" id="Model.post_impl"><a class="viewcode-back" href="../../api/dmpr.html#dmpr.base.Model.post_impl">[docs]</a>    <span class="k">def</span> <span class="nf">post_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">infile</span><span class="p">,</span> <span class="n">outfile</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Post-processing implementation</span>
+
+<span class="sd">        Must be overridden by the model class</span>
+
+<span class="sd">        :param str infile: Filename of the input file</span>
+<span class="sd">        :param str outfile: Filename of the output file (created by this function)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;To be overridden by the model class&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Model.add_meta"><a class="viewcode-back" href="../../api/dmpr.html#dmpr.base.Model.add_meta">[docs]</a>    <span class="k">def</span> <span class="nf">add_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">infile</span><span class="p">,</span> <span class="n">outfile</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add file-level metadata to the processed file, including history and</span>
+<span class="sd">        anything added to the dictionary :py:attr:`Model.run_meta`.</span>
+
+<span class="sd">        :param str infile: Filename of the input file</span>
+<span class="sd">        :param str outfile: Filename of the output file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dmp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">setncatts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dmp</span><span class="o">.</span><span class="n">file_metadata</span><span class="p">())</span>
+
+            <span class="n">f</span><span class="o">.</span><span class="n">setncatts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">run_meta</span><span class="p">)</span>
+
+            <span class="n">add_history</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">infile</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="add_history"><a class="viewcode-back" href="../../api/dmpr.html#dmpr.base.add_history">[docs]</a><span class="k">def</span> <span class="nf">add_history</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">infile</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add history information to a dataset</span>
+
+<span class="sd">    :param netCDF4.Dataset dataset: Dataset to modify</span>
+<span class="sd">    :param str infile: Filename of the input file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">history</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">getncattr</span><span class="p">(</span><span class="s1">&#39;history&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="n">history</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">history</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">:</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">) post </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="n">platform</span><span class="o">.</span><span class="n">node</span><span class="p">(),</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">__version__</span><span class="p">,</span>
+            <span class="n">infile</span><span class="p">)</span>
+    <span class="n">dataset</span><span class="o">.</span><span class="n">setncattr</span><span class="p">(</span><span class="s1">&#39;history&#39;</span><span class="p">,</span> <span class="n">history</span><span class="p">)</span></div>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Scott Wales.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

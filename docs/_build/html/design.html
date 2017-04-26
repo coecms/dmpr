@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Design &#8212; dmpr 0.0.2.dev38 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.2.dev38',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Modules" href="api/modules.html" />
+    <link rel="prev" title="README" href="readme.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="design">
+<h1>Design<a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li>Use a common tool for all models supported by the Centre</li>
+<li>Support the whole publication pipeline, from model output to publication</li>
+<li>Add metadata at the earliest point possible</li>
+<li>Ensure CF compliance</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="design-1">
+<h1>Design 1<a class="headerlink" href="#design-1" title="Permalink to this headline">¶</a></h1>
+<p>A CLI tool with multiple commands for different stages in the model&#8217;s lifetime</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>dmpr post</cite>: Post-process immediately after a model run</li>
+<li><cite>dmpr stage</cite>: Prepare output for publication, adding metadata from the data
+management plan and checking metadata compliance</li>
+<li><cite>dmpr publish</cite>: Final publication steps, adding DOI and moving to final
+versioned location (admin only?)</li>
+</ul>
+</div></blockquote>
+<div class="section" id="commands">
+<h2>Commands<a class="headerlink" href="#commands" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="post">
+<h3>post<a class="headerlink" href="#post" title="Permalink to this headline">¶</a></h3>
+<p>The post command has one required argument, the model run directory, and can
+take an arbitray list of files to post-process</p>
+<p>After running the post command the input files have been converted to
+CF-Compliant NetCDF files and moved to a run-specific output directory</p>
+<p>A list of newly created files is printed to standard output</p>
+</div>
+<div class="section" id="stage">
+<h3>stage<a class="headerlink" href="#stage" title="Permalink to this headline">¶</a></h3>
+<p>The stage command has one required argument, the job identifier used by
+post-processing. If a data management plan identifier is not present in the
+processed files this identifier is also required</p>
+<p>The command updates metadata from the DMP and runs a CF compliance check</p>
+<p>After running the stage command if the data files pass a CF-Compliance check
+they are copied to ua8 under their DMP directory</p>
+</div>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cli">
+<h3>cli<a class="headerlink" href="#cli" title="Permalink to this headline">¶</a></h3>
+<p>The command-line interface is created using Click. Options are kept simple in
+order to make output consistent between users.</p>
+<p>The model is identified either by specifying the name or by reading the files
+in the run directory, using functions in <a class="reference internal" href="api/dmpr.html#module-dmpr.model" title="dmpr.model"><code class="xref py py-mod docutils literal"><span class="pre">dmpr.model</span></code></a>.</p>
+</div>
+<div class="section" id="models">
+<h3>models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h3>
+<p>Each model has its own class, derived from <a class="reference internal" href="api/dmpr.html#dmpr.base.Model" title="dmpr.base.Model"><code class="xref py py-class docutils literal"><span class="pre">dmpr.base.Model</span></code></a>. The model must
+override two functions, <cite>read_configs()</cite> and <cite>post_impl()</cite>, and may optionally
+override <cite>outfile()</cite> to customise the processed file&#8217;s name.</p>
+<p><cite>read_configs()</cite> is passed the run directory, and should read the configuration
+files held there to set up metadata from the run configuration.</p>
+<p><cite>post_impl()</cite> is passed the names of the input and output files, and should
+post-process the input files and write the processed data to the output file.</p>
+<p>The base class uses these functions in it&#8217;s <cite>post()</cite> function, which generates
+the output path, processes the file and then adds DMP metadata</p>
+<p>Linking with a DMP is optional, as it may not be created at the time of the
+model run. A DMP may be linked after post-processing using <cite>dmpr stage</cite>.</p>
+</div>
+<div class="section" id="dmp">
+<h3>dmp<a class="headerlink" href="#dmp" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="api/dmpr.html#dmpr.dmp.DMP" title="dmpr.dmp.DMP"><code class="xref py py-class docutils literal"><span class="pre">dmpr.dmp.DMP</span></code></a> class holds data management plan related metadata, read from
+the online database. It has an <cite>addmeta()</cite> function to add metadata it reads
+from the database to a file, which gets automatically called by the model&#8217;s
+<cite>post()</cite> function.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Design</a><ul>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#design-1">Design 1</a><ul>
+<li><a class="reference internal" href="#commands">Commands</a><ul>
+<li><a class="reference internal" href="#post">post</a></li>
+<li><a class="reference internal" href="#stage">stage</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#implementation">Implementation</a><ul>
+<li><a class="reference internal" href="#cli">cli</a></li>
+<li><a class="reference internal" href="#models">models</a></li>
+<li><a class="reference internal" href="#dmp">dmp</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="readme.html" title="previous chapter">README</a></li>
+      <li>Next: <a href="api/modules.html" title="next chapter">Modules</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/design.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Scott Wales.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/design.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
