@@ -25,6 +25,7 @@ requirements:
         - requests
         - beautifulsoup4
         - tabulate
+        - click
 
 test:
     source_files:
