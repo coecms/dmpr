@@ -72,3 +72,8 @@ Run tests::
 Build documentation::
 
     python setup.py build_sphinx
+
+Upload documentation::
+
+    git subtree push --prefix docs/_build/html/ origin gh-pages
+
