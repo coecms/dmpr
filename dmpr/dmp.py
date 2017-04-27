@@ -17,75 +17,10 @@ from __future__ import print_function
 import six
 from six.moves.urllib.parse import urljoin
 from bs4 import BeautifulSoup
-import re
 import click
 from tabulate import tabulate
 
-from .dmponline import DMPServer, default_server
-
-plan_re = re.compile('.*/projects/(?P<project_id>[^/]+)/plans/(?P<plan_id>[^/]+)/edit$')
-
-class Project(object):
-    """
-    A DMPOnline project
-
-    Contains the same attributes as you'll find in DMPOnline's ``/projects.json``
-    """
-
-    def __init__(self, server, json):
-        self.server = server
-        # Set attributes automatically from the Json
-        [setattr(self, k, v) for k, v in six.iteritems(json)]
-        self.json = json
-
-    def __str__(self):
-        return self.title
-
-    def __repr__(self):
-        return '<%s>'%self.url
-
-    @property
-    def url_path(self):
-        return 'projects/%s'%self.slug
-
-    @property
-    def url(self):
-        return urljoin(self.server.server, self.url_path)
-
-    def plan_urls(self):
-        """
-        Returns the plans attached to this project as a dictionary
-        """
-        _plans = {}
-
-        # Get the tab links
-        r = self.server._get(self.url_path)
-        soup = BeautifulSoup(r.text, 'html.parser')
-        links = soup.find(id='project-tabs').find_all('a')
-
-        # Get the plan URLs
-        for link in links:
-            match = plan_re.match(link.href)
-            if match is not None:
-                plan_id = match.groupdict()['plan_id']
-                _plans[link.text] = '%s/plans/%s'%(self.url_path, plan_id)
-        return _plans
-
-    def export_plans(form):
-        """
-        Export this project's plans
-
-        :param str form: Output format
-        """
-        urls = self.plan_urls()
-        _plans = {}
-
-        for k, v in six.iteritems(urls):
-            if form in ['json', 'xml', 'text', 'csv']:
-                _plans[k] = self.server._get('%s/export'%v, data={'format': form}).text
-            else:
-                _plans[k] = self.server._get('%s/export'%v, data={'format': form}).content
-        return _plans
+from .dmponline import DMPOnline, default_server
 
 class DMP(object):
     """
@@ -115,7 +50,6 @@ class DMP(object):
             meta['grant_number'] = self.project.grant_number
 
         return meta
-
 @click.group(name='dmp')
 def dmpcli():
     """
@@ -133,7 +67,7 @@ def list(server, email, password):
 
         click list
     """
-    s = DMPServer(server)
+    s = DMPOnline(server)
     s.login(email, password)
     table = [[project.id, project.title, project.url] for project in s.projects()]
     print(tabulate(table, headers=['ID', 'Title', 'URL']))
@@ -157,7 +91,7 @@ def export(server, email, password, output, format, id):
     except OSError:
         pass
 
-    s = DMPServer(server)
+    s = DMPOnline(server)
     s.login(email, password)
 
     for i in id:
