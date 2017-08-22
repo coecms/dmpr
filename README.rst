@@ -65,7 +65,7 @@ Development install::
     source activate dmpr-dev
     pip install -e '.[dev]'
 
-or
+or::
 
     module load conda/analysis3
     install -e '.[dev]' --user
