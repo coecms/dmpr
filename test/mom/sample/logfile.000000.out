@@ -1,0 +1,2955 @@
+========================================================================
+READ_ASCII_FILE: $Id$:$Name$
+READ_ASCII_FILE: File: input.nml
+========================================================================
+READ_INPUT_NML: $Id$:$Name$
+READ_INPUT_NML: input.nml 
+  &coupler_nml
+        months = 1,
+        days   = 0,
+        current_date = 1980,1,1,0,0,0,
+        calendar = 'JULIAN',
+        dt_cpld = 10800,
+        dt_atmos = 10800,
+        do_atmos = .false.,
+        do_land = .false.,
+        do_ice = .true.,
+        do_ocean = .true.,
+        atmos_npes = 0,
+        ocean_npes = 0,
+        concurrent = .false.
+        use_lag_fluxes=.true.    ! set to false for stock checking
+        check_stocks = 0         !  -1 (no checking), 0 (start/end only), 1 (eve
+ ry timestep)
+ /
+ 
+  &diag_integral_nml
+        file_name  = 'diag_integral.out',
+        time_units = 'days',
+        output_interval = 1.0
+ /
+ 
+  &diag_manager_nml
+        max_axes = 100,
+        max_num_axis_sets = 100,
+        max_input_fields = 699
+        max_output_fields = 699
+        mix_snapshot_average_fields=.false.
+         issue_oor_warnings = .FALSE.
+ /
+ 
+  &flux_exchange_nml
+        debug_stocks = .FALSE.
+        divert_stocks_report = .TRUE.            ! default=F
+        do_area_weighted_flux = .FALSE.
+ /
+ 
+  &fms_io_nml
+        threading_read='multi'
+        threading_write='single'
+        fileset_write='single'
+        max_files_r = 200
+        max_files_w = 200
+ /
+ 
+  &fms_nml
+        clock_grain='LOOP' ! 'COMPONENT' ! 'ROUTINE' !
+        domains_stack_size = 8000000
+        stack_size =0
+ /
+ 
+  &generic_tracer_nml
+        do_generic_tracer=.true.
+        do_generic_CFC=.false.                 ! no CFCs
+        do_generic_TOPAZ=.true.
+ /
+ 
+  &ice_albedo_nml
+        t_range = 10.
+ /
+ 
+  &ice_model_nml
+        nsteps_dyn=108
+        nsteps_adv=1
+        num_part = 6
+        wd_turn = 0.0
+        spec_ice=.false.
+        ice_bulk_salin = 0.005
+        alb_sno = 0.825
+        alb_ice = 0.615
+        t_range_melt = 10.0                ! CHECK
+        heat_rough_ice = 5.0e-4
+        cm2_bugs = .false.
+        do_icebergs = .false.
+        add_diurnal_sw = .true.
+        h_lo_lim = 1.e-10
+ /
+ 
+  &icebergs_nml
+        really_debug=.FALSE.
+        debug=.FALSE.
+        verbose=.FALSE.                   ! to match CM2G/ESM2G
+        verbose_hrs=2400                  ! to match CM2G
+        use_operator_splitting=.TRUE.
+        bergy_bit_erosion_fraction=0.0
+        sicn_shift=0.1
+        parallel_reprod=.TRUE.
+        traj_sample_hrs=0
+ /
+ 
+  &monin_obukhov_nml
+             neutral = .true.
+ /
+ 
+  &ocean_adv_vel_diag_nml
+        diag_step=2400
+        verbose_cfl=.false.
+        max_cfl_value=100.0
+        large_cfl_value=10.0
+ /
+ 
+  &ocean_advection_velocity_nml
+        max_advection_velocity = 0.5
+ /
+ 
+  &ocean_albedo_nml
+        ocean_albedo_option = 2
+ /
+ 
+  &ocean_barotropic_nml
+        debug_this_module=.false.
+        zero_tendency=.false.
+        barotropic_time_stepping_A=.true.
+        barotropic_time_stepping_B=.false.
+        pred_corr_gamma=.20
+        smooth_eta_t_laplacian=.false.
+        smooth_pbot_t_laplacian=.false.
+        smooth_eta_t_biharmonic=.true.
+        smooth_pbot_t_biharmonic=.true.
+        smooth_eta_diag_laplacian=.true.
+        vel_micom_bih=0.01
+        vel_micom_lap=.05
+        vel_micom_lap_diag=1.0
+        truncate_eta=.false.
+        eta_max=8.0
+        verbose_truncate=.true.
+        frac_crit_cell_height=0.20
+        diag_step=2400
+ /
+ 
+  &ocean_bbc_nml
+        uresidual = 0.05
+        cdbot  = 2.e-3
+        use_geothermal_heating=.true.
+ /
+ 
+  &ocean_bih_friction_nml
+        bih_friction_scheme='general'
+ /
+ 
+  &ocean_bih_tracer_nml
+        use_this_module=.false.
+ /
+ 
+  &ocean_bihcst_friction_nml
+        use_this_module=.false.
+ /
+ 
+  &ocean_bihgen_friction_nml
+        use_this_module=.true.
+        k_smag_iso=2.0
+        k_smag_aniso=0.0
+        vel_micom_iso=0.04
+        vel_micom_aniso=0.0
+        vel_micom_bottom=0.01
+        eq_vel_micom_iso=0.0
+        eq_vel_micom_aniso=0.0
+        eq_lat_micom=0.0
+        visc_crit_scale=.25
+        equatorial_zonal=.false.
+        bottom_5point=.true.
+        ncar_boundary_scaling=.true.
+        ncar_rescale_power=2
+        ncar_vconst_4=2.e-8
+        ncar_vconst_5=5
+ /
+ 
+  &ocean_convect_nml
+        use_this_module=.false.
+ /
+ 
+  &ocean_coriolis_nml
+        use_this_module=.true.
+        acor=0.50
+ /
+ 
+  &ocean_density_nml
+        potrho_min=1028.0
+        potrho_max=1038.0
+        neutralrho_min=1020.0
+        neutralrho_max=1030.0
+        layer_nk=80
+        eos_linear=.false.
+  eos_preteos10=.true.
+ /
+ 
+  &ocean_domains_nml
+ 
+ /
+ 
+  &ocean_drifters_nml
+        use_this_module=.false.
+ /
+ 
+  &ocean_form_drag_nml
+        use_this_module=.false.
+ /
+ 
+  &ocean_frazil_nml
+        use_this_module=.true.
+        debug_this_module=.false.
+        freezing_temp_simple=.true.
+        frazil_only_in_surface=.true.
+ /
+ 
+  &ocean_grids_nml
+        debug_this_module=.true.
+        read_rho0_profile=.false.
+ /
+ 
+  &ocean_increment_eta_nml
+       use_this_module=.false.
+ /
+ 
+  &ocean_increment_tracer_nml
+       use_this_module=.false.
+ /
+ 
+  &ocean_increment_velocity_nml
+       use_this_module=.false.
+ /
+ 
+  &ocean_lap_friction_nml
+        lap_friction_scheme='general'
+ /
+ 
+  &ocean_lap_tracer_nml
+        use_this_module=.false.
+ /
+ 
+  &ocean_lapcst_friction_nml
+        use_this_module=.false.
+ /
+ 
+  &ocean_lapgen_friction_nml
+        use_this_module=.true.
+        k_smag_iso=0.0
+        k_smag_aniso=0.0
+        bottom_5point=.true.
+        vel_micom_iso=0.10
+        viscosity_scale_by_rossby=.true.
+        viscosity_scale_by_rossby_power=4.0
+        viscosity_ncar=.false.
+        restrict_polar_visc=.true.
+        restrict_polar_visc_lat=60.0
+        restrict_polar_visc_ratio=0.35
+ /
+ 
+  &ocean_mixdownslope_nml
+        use_this_module=.true.
+        debug_this_module=.false.
+        read_mixdownslope_mask=.true.
+        mixdownslope_mask_gfdl=.true.
+        mixdownslope_npts=4
+ /
+ 
+  &ocean_model_nml
+        impose_init_from_restart=.false.
+        time_tendency='twolevel'
+        vertical_coordinate='zstar'
+        baroclinic_split = 1
+        surface_height_split = 1
+        barotropic_split = 80
+        debug=.false.
+        layout=6,4
+        dt_ocean=5400
+ /
+ 
+  &ocean_momentum_source_nml
+        use_this_module=.false.
+ /
+ 
+  &ocean_nphysicsA_nml
+        use_this_module=.false.
+        debug_this_module=.false.
+        neutral_physics_limit=.true.
+        neutral_physics_simple=.false.
+        neutral_linear_gm_taper=.true.
+        neutral_sine_taper=.true.
+        tmask_neutral_on=.true.
+ /
+ 
+  &ocean_nphysicsB_nml
+        use_this_module=.true.
+        debug_this_module=.false.
+        neutral_physics_limit=.true.
+        nblayer_smooth=.true.
+        surf_turb_thick_min_k=5
+        surf_turb_thick_min=50.0
+ /
+ 
+  &ocean_nphysicsC_nml
+        use_this_module=.false.
+ /
+ 
+  &ocean_nphysics_nml
+        use_this_module=.true.
+        debug_this_module=.false.
+        use_nphysicsA=.false.
+        use_nphysicsB=.true.
+        use_nphysicsC=.false.
+ /
+ 
+  &ocean_nphysics_util_nml
+        nphysics_util_zero_init=.true.
+        smax=0.005
+        swidth=0.002
+        aredi=600.0
+        agm=800.0
+        aredi_equal_agm=.false.
+        drhodz_mom4p1=.true.
+        drhodz_smooth_horz=.false.
+        drhodz_smooth_vert=.false.
+        tracer_mix_micom=.false.
+        vel_micom=0.0
+        agm_closure=.true.
+        agm_closure_scaling=0.07
+        agm_closure_grid_scaling=.true.
+        agm_closure_min=100.0
+        agm_closure_max=800.0
+        agm_closure_length_fixed=.false.
+        agm_closure_length_rossby=.false.
+        agm_closure_length_bczone=.false.
+        agm_closure_baroclinic=.true.
+        agm_closure_eden_greatbatch=.false.
+        agm_closure_eden_gamma=0.0
+        agm_closure_eady_smooth_vert=.true.
+        agm_closure_eady_smooth_horz=.true.
+        agm_closure_eady_cap=.true.
+        agm_closure_eady_ave_mixed=.true.
+        agm_smooth_space=.false.
+        agm_smooth_time=.false.
+        agm_damping_time=45.0
+        agm_closure_length=50.e3
+        agm_closure_buoy_freq=.004
+        agm_closure_upper_depth=100.0
+        agm_closure_lower_depth=2000.0
+        rossby_radius_max=100e3
+        rossby_radius_min=15e3
+ /
+ 
+  &ocean_obc_nml
+ 
+ /
+ 
+  &ocean_obs_nml
+ 
+ /
+ 
+  &ocean_overexchange_nml
+        use_this_module=.false.
+        debug_this_module=.false.
+        overexch_npts=4
+        overexch_weight_far=.false.
+        overflow_umax=5.0
+        overexch_check_extrema=.false.
+ /
+ 
+  &ocean_overflow_nml
+        use_this_module=.false.
+        debug_this_module=.false.
+ /
+ 
+  &ocean_passive_nml
+ 
+ /
+ 
+  &ocean_polar_filter_nml
+        use_this_module=.false.
+ /
+ 
+  &ocean_pressure_nml
+ 
+ /
+ 
+  &ocean_rivermix_nml
+        use_this_module=.true.
+        debug_this_module=.false.
+        discharge_combine_runoff_calve=.true.
+        river_insertion_thickness=40.0
+        calving_insertion_thickness=40.0
+        runoff_insertion_thickness=40.0
+        river_diffusion_thickness=0.0
+        river_diffusivity=0.0
+        river_diffuse_salt=.false.
+        river_diffuse_temp=.false.
+ /
+ 
+  &ocean_riverspread_nml
+        use_this_module=.false.
+ /
+ 
+  &ocean_rough_nml
+        rough_scheme = 'beljaars'
+ /
+ 
+  &ocean_sbc_nml
+        use_waterflux=.true.
+        land_model_heat_fluxes=.false.
+        temp_restore_tscale=-10.
+        salt_restore_tscale=-10.
+        max_ice_thickness=8.0                      ! smg 2009/04/13
+        avg_sfc_velocity=.true.
+        avg_sfc_temp_salt_eta=.true.
+        waterflux_tavg=.false. ! false is default setting
+        calvingspread=.false.
+        runoffspread=.false.
+        use_full_patm_for_sea_level=.true.           ! smg 2009/04/09
+ /
+ 
+  &ocean_shortwave_csiro_nml
+        use_this_module=.false.
+ /
+ 
+  &ocean_shortwave_gfdl_nml
+        use_this_module=.true.
+        debug_this_module=.false.
+        read_chl=.true.                ! true in CM2M
+        zmax_pen=200.0
+        enforce_sw_frac=.true.
+        override_f_vis=.false.
+        optics_morel_antoine=.false.
+        optics_manizza=.true.
+ /
+ 
+  &ocean_shortwave_jerlov_nml
+        use_this_module=.false.
+ /
+ 
+  &ocean_shortwave_nml
+        use_this_module=.true.
+        use_shortwave_gfdl=.true.
+        use_shortwave_csiro=.false.
+        use_shortwave_jerlov=.false.
+ /
+ 
+  &ocean_sigma_transport_nml
+        use_this_module=.true.
+        sigma_diffusion_on=.true.
+        sigma_advection_on=.false.
+        sigma_advection_sgs_only=.false.
+        sigma_just_in_bottom_cell=.true.
+        tmask_sigma_on=.false.
+        sigma_diffusivity_ratio=1.e-6
+        tracer_mix_micom=.true.
+        vel_micom=0.05
+        sigma_umax=0.01
+        smooth_sigma_thickness=.true.
+        smooth_sigma_velocity=.true.
+        smooth_velmicom=0.2
+        thickness_sigma_layer= 100.0
+        thickness_sigma_max  = 100.0
+        thickness_sigma_min  = 100.0
+ /
+ 
+  &ocean_sponges_eta_nml
+       use_this_module=.false.
+ /
+ 
+  &ocean_sponges_tracer_nml
+       use_this_module=.false.
+       damp_coeff_3d=.false.
+ /
+ 
+  &ocean_sponges_velocity_nml
+       use_this_module=.false.
+ /
+ 
+  &ocean_submesoscale_nml
+        use_this_module=.true.
+        debug_this_module=.false.
+        use_hblt_equal_mld=.true.
+        min_kblt=4
+        smooth_hblt=.false.
+        front_length_deform_radius=.true.
+        front_length_const=5e3
+        limit_psi=.true.
+        limit_psi_velocity_scale=0.50
+        submeso_limit_flux=.true.
+ /
+ 
+  &ocean_tempsalt_nml
+        debug_this_module=.false.
+        temperature_variable='potential_temp'
+        pottemp_2nd_iteration=.true.
+        t_min=-15.0
+        t_max = 55.0
+        s_min = -1.0
+        s_max = 55.0
+        t_min_limit =-1.9
+        t_max_limit =32.0
+        s_min_limit =5.0
+        s_max_limit =42.0
+ /
+ 
+  &ocean_thickness_nml
+        debug_this_module=.false.
+        debug_this_module_detail=.false.
+        thickness_dzt_min_init=2.0
+        thickness_dzt_min=2.0
+        thickness_method='energetic'
+        initialize_zero_eta=.false.
+        read_rescale_rho0_mask=.true.
+        rescale_rho0_mask_gfdl=.true.
+        rescale_rho0_basin_label=7.0
+        rescale_rho0_value=.75
+ /
+ 
+  &ocean_time_filter_nml
+        use_this_module=.false.
+ /
+ 
+  &ocean_topog_nml
+        min_thickness=5.0
+ /
+ 
+  &ocean_tracer_advect_nml
+        debug_this_module=.false.
+        advect_sweby_all=.false.                ! compare field table settings t
+ o CM2M
+        limit_with_upwind=.false.
+ /
+ 
+  &ocean_tracer_diag_nml
+        tracer_conserve_days=100.0
+        diag_step=2400
+        do_bitwise_exact_sum=.false.
+        smooth_mld=.true.
+ /
+ 
+  &ocean_tracer_nml
+        debug_this_module=.false.
+        zero_tendency=.false.
+        remap_depth_to_s_init=.false.
+        zero_tracer_source=.false.
+        limit_age_tracer=.true.
+        age_tracer_max_init=0.
+        tmask_limit_ts_same=.true.
+        frazil_heating_before_vphysics=.false.
+        frazil_heating_after_vphysics=.true.
+ /
+ 
+  &ocean_velocity_advect_nml
+ 
+ /
+ 
+  &ocean_velocity_diag_nml
+        debug_this_module=.false.
+        diag_step=1
+        energy_diag_step=2400
+        max_cfl_value=100.0
+        large_cfl_value=10.0
+ /
+ 
+  &ocean_velocity_nml
+        truncate_velocity=.false.
+        truncate_verbose=.true.
+        truncate_velocity_value=2.0
+        zero_tendency=.false.
+        adams_bashforth_third=.true.
+ /
+ 
+  &ocean_vert_chen_nml
+ 
+ /
+ 
+  &ocean_vert_const_nml
+ 
+ /
+ 
+  &ocean_vert_gotm_nml
+ 
+ /
+ 
+  &ocean_vert_kpp_iow_nml
+        use_this_module=.false.
+ /
+ 
+  &ocean_vert_kpp_mom4p0_nml
+        use_this_module=.false.
+ /
+ 
+  &ocean_vert_kpp_mom4p1_nml
+        use_this_module=.true.
+        diff_cbt_iw=0.0
+        visc_cbu_iw=0.0
+        double_diffusion=.true.
+        Ricr=0.3
+        smooth_blmc=.true.
+ /
+ 
+  &ocean_vert_mix_nml
+        aidif=1.0
+        vert_mix_scheme='kpp_mom4p1'
+        vert_diff_back_via_max=.true.
+        use_diff_cbt_table=.false.
+        linear_taper_diff_cbt_table=.false.
+        bryan_lewis_diffusivity=.true.
+        bryan_lewis_lat_depend=.true.
+        bryan_lewis_lat_transition=35.0
+        afkph_90=0.725
+        dfkph_90=1.15
+        sfkph_90=4.5e-5
+        zfkph_90=2500.0e5
+        afkph_00=0.675
+        dfkph_00=1.15
+        sfkph_00=4.5e-5
+        zfkph_00=2500.0e5
+ /
+ 
+  &ocean_vert_pp_nml
+ 
+ /
+ 
+  &ocean_vert_tidal_nml
+        use_this_module=.true.
+        use_wave_dissipation=.true.
+        use_drag_dissipation=.true.
+        read_wave_dissipation=.false.
+        fixed_wave_dissipation=.false.
+        read_tide_speed=.true.
+        read_roughness=.true.
+        reading_roughness_amp=.true.
+        reading_roughness_length=.false.
+        roughness_scale=30e3
+        tide_speed_data_on_t_grid=.true.
+        drhodz_min=1e-12
+        mixing_efficiency_n2depend=.true.
+        max_wave_diffusivity=100.0e-4
+        wave_energy_flux_max=0.10
+        decay_scale=300.0
+        shelf_depth_cutoff=160.0
+        background_diffusivity=0.0
+        background_viscosity=1.e-4
+ /
+ 
+  &ocean_xlandinsert_nml
+        use_this_module=.true.
+        verbose_init=.true.
+ /
+ 
+  &ocean_xlandmix_nml
+        use_this_module=.true.
+        verbose_init=.true.
+        xlandmix_kmt=.true.
+ /
+ 
+  &oda_core_nml
+ 
+ /
+ 
+  &oda_nml
+ 
+ /
+ 
+  &sat_vapor_pres_nml
+        construct_table_wrt_liq = .true.
+        construct_table_wrt_liq_and_ice = .true.
+ /
+ 
+  &topography_nml
+        topog_file = 'INPUT/navy_topography.data.nc'
+ /
+ 
+  &xgrid_nml
+         make_exchange_reproduce = .true.
+         interp_method = 'second_order'
+ /
+ 
+ &data_override_nml
+  debug_data_override = .true.
+ /
+ 
+
+MPP module $Id mpp.F90 $$Name$
+MPP started with NPES=    24
+Using MPI library for message passing...
+Realtime clock resolution=  1.0000E-06 sec (   1000000 ticks/sec)
+Clock rolls over after   9.2234E+12 sec ( 9223372036854775806 ticks)
+
+MPP module $Id mpp_parameter.F90 $$Name$
+
+MPP module $Id mpp_data.F90 $$Name$
+
+MPP_DOMAINS module $Id$$Name$
+ &MPP_IO_NML
+ HEADER_BUFFER_VAL       =       16384,
+ GLOBAL_FIELD_ON_ROOT_PE = T,
+ IO_CLOCKS_ON    = F,
+ SHUFFLE =           0,
+ DEFLATE_LEVEL   =          -1
+ /
+
+MPP_IO module $Id$
+MPP_IO module $Name$
+
+Using netCDF library version 4.2.1.1 of May 10 2013 10:38:04 $
+ &FMS_IO_NML
+ FMS_NETCDF_OVERRIDE     = T,
+ FMS_NETCDF_RESTART      = T,
+ THREADING_READ  = multi                           ,
+ FORMAT  = netcdf                          ,
+ READ_ALL_PE     = T,
+ IOSPEC_IEEE32   = -N ieee_32                                                      ,
+ MAX_FILES_W     =         200,
+ MAX_FILES_R     =         200,
+ READ_DATA_BUG   = F,
+ TIME_STAMP_RESTART      = T,
+ PRINT_CHKSUM    = F,
+ SHOW_OPEN_NAMELIST_FILE_WARNING = F,
+ DEBUG_MASK_LIST = F,
+ CHECKSUM_REQUIRED       = T,
+ DR_SET_SIZE     =          10,
+ THREADING_WRITE = single                          ,
+ FILESET_WRITE   = single                          
+ /
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+ &FMS_NML
+ READ_ALL_PE     = T,
+ CLOCK_GRAIN     = LOOP            ,
+ CLOCK_FLAGS     = NONE            ,
+ WARNING_LEVEL   = warning ,
+ IOSPEC_IEEE32   = -N ieee_32                                                      ,
+ STACK_SIZE      =           0,
+ DOMAINS_STACK_SIZE      =     8000000,
+ PRINT_MEMORY_USAGE      = F
+ /
+ nml_error_codes=
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id: coupler_main.F90,v 20.0 2013/12/13 23:27:07 fms Exp $
+$Name: tikal $
+
+================================================================================
+$Id$
+$Name$
+ &COUPLER_NML
+ CURRENT_DATE    =        1980, 2*1, 3*0,
+ CALENDAR        = JULIAN           ,
+ FORCE_DATE_FROM_NAMELIST        = T,
+ MONTHS  =           1,
+ DAYS    =           0,
+ HOURS   =           0,
+ MINUTES =           0,
+ SECONDS =           0,
+ DT_CPLD =       10800,
+ DT_ATMOS        =       10800,
+ DO_ATMOS        = F,
+ DO_LAND = F,
+ DO_ICE  = T,
+ DO_OCEAN        = T,
+ DO_FLUX = T,
+ ATMOS_NPES      =          24,
+ OCEAN_NPES      =          24,
+ ICE_NPES        =          24,
+ LAND_NPES       =          24,
+ ATMOS_NTHREADS  =           1,
+ OCEAN_NTHREADS  =           1,
+ CONCURRENT      = F,
+ USE_LAG_FLUXES  = T,
+ DO_CHKSUM       = F,
+ CHECK_STOCKS    =           0,
+ RESTART_INTERVAL        = 6*0
+ /
+  current date used = 1980 January  1  0:00:00 gmt
+
+================================================================================
+$Id$
+$Name$
+ &DIAG_MANAGER_NML
+ APPEND_PELIST_NAME      = F,
+ MIX_SNAPSHOT_AVERAGE_FIELDS     = F,
+ MAX_OUTPUT_FIELDS       =         699,
+ MAX_INPUT_FIELDS        =         699,
+ MAX_AXES        =         100,
+ DO_DIAG_FIELD_LOG       = F,
+ WRITE_BYTES_IN_FILE     = F,
+ DEBUG_DIAG_MANAGER      = F,
+ MAX_NUM_AXIS_SETS       =         100,
+ MAX_FILES       =          31,
+ USE_CMOR        = F,
+ ISSUE_OOR_WARNINGS      = F,
+ OOR_WARNINGS_FATAL      = F,
+ MAX_OUT_PER_IN_FIELD    =         150,
+ CONSERVE_WATER  = T,
+ REGION_OUT_USE_ALT_VALUE        = T,
+ MAX_FIELD_ATTRIBUTES    =           2,
+ MAX_FILE_ATTRIBUTES     =           2,
+ PREPEND_DATE    = T
+ /
+========================================================================
+READ_ASCII_FILE: $Id$:$Name$
+READ_ASCII_FILE: File: diag_table
+base date used = 1980 January  1  0:00:00 gmt
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+# specific humidity for moist runs                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+ "TRACER", "atmos_mod", "sphum"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+# sphum must be present on land as well                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+ "TRACER", "land_mod",     "sphum"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+# test tracer for radon                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+#                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+# "TRACER", "atmos_mod", "radon"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+#           "longname",     "radon test tracer"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+#           "units",        "kg/kg" /                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+###.................................................                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+"diag_tracers","ocean_mod","frazil"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+###  MDPPM for T,S                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+"prog_tracers","ocean_mod","temp"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+"prog_tracers","ocean_mod","salt"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+###  MDPPM for Age                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+"tracer_packages","ocean_mod","ocean_age_tracer"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+###  this entry not in CM2M - why??                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+"prog_tracers","ocean_mod","age_global"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+"namelists","ocean_mod","ocean_age_tracer/global"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+"xland_mix","ocean_mod","xland_mix"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+"xland_insert","ocean_mod","xland_insert"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+"diff_cbt_enhance","ocean_mod","diff_cbt_enhance"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+ ----------------------------------------------------
+ Contents of tracer entry            1
+ Model type and field name
+ Model                :            1
+ Field name           : sphum
+ Tracer units         : kg/kg
+ Tracer longname      : specific humidity
+ Tracer is_prognostic :  T
+ ----------------------------------------------------
+Number of tracers in field table for atmospheric model =    1
+Number of tracers in field table for oceanic model =    0
+ ----------------------------------------------------
+ Contents of tracer entry            2
+ Model type and field name
+ Model                :            3
+ Field name           : sphum
+ Tracer units         : kg/kg
+ Tracer longname      : specific humidity
+ Tracer is_prognostic :  T
+ ----------------------------------------------------
+Number of tracers in field table for land model =    1
+Number of tracers in field table for ice model =    0
+Number of tracers in field table for coupler model =    0
+
+atmos model domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+================================================================================
+$Id: diag_integral.F90,v 20.0 2013/12/13 23:17:05 fms Exp $
+$Name: tikal $
+ &DIAG_INTEGRAL_NML
+ OUTPUT_INTERVAL =   1.00000000000000     ,
+ TIME_UNITS      = days    ,
+ FILE_NAME       = diag_integral.out                                               ,
+ PRINT_HEADER    = T,
+ FIELDS_PER_PRINT_LINE   =           4
+ /
+ &DATA_OVERRIDE_NML
+ DEBUG_DATA_OVERRIDE     = T,
+ GRID_CENTER_BUG = F
+ /
+
+================================================================================
+$Id$
+$Name$
+ &HORIZ_INTERP_NML
+ REPRODUCE_SIENA = F
+ /
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+CVS $Id$                                                                                                                        
+
+
+Tag $Name$                                                                                                                      
+
+ &TIME_INTERP_EXTERNAL_NML
+ NUM_IO_BUFFERS  =           2,
+ DEBUG_THIS_MODULE       = F,
+ MAX_FIELDS      =         100,
+ MAX_FILES       =          40
+ /
+
+================================================================================
+$Id$
+$Name$
+ &TIME_INTERP_NML
+ PERTHLIKE_BEHAVIOR      = F
+ /
+
+================================================================================
+$Id: land_model.F90,v 20.0 2013/12/13 23:31:21 fms Exp $
+$Name: tikal $
+
+land model domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+ &DATA_OVERRIDE_NML
+ DEBUG_DATA_OVERRIDE     = T,
+ GRID_CENTER_BUG = F
+ /
+ &ICE_MODEL_NML
+ MOM_ROUGH_ICE   =  1.000000000000000E-004,
+ HEAT_ROUGH_ICE  =  5.000000000000000E-004,
+ P0      =   27500.0000000000     ,
+ C0      =   20.0000000000000     ,
+ CDW     =  3.240000000000000E-003,
+ WD_TURN =  0.000000000000000E+000,
+ KMELT   =   240.000000000000     ,
+ ALB_SNO =  0.825000000000000     ,
+ ALB_ICE =  0.615000000000000     ,
+ PEN_ICE =  0.300000000000000     ,
+ OPT_DEP_ICE     =  0.670000000000000     ,
+ NSTEPS_DYN      =         108,
+ NSTEPS_ADV      =           1,
+ NUM_PART        =           6,
+ ATMOS_WINDS     = T,
+ SLAB_ICE        = F,
+ SPEC_ICE        = F,
+ ICE_BULK_SALIN  =  5.000000000000000E-003,
+ LAYOUT  = 2*0,
+ DO_ICE_RESTORE  = F,
+ DO_ICE_LIMIT    = F,
+ MAX_ICE_LIMIT   =   4.00000000000000     ,
+ ICE_RESTORE_TIMESCALE   =   5.00000000000000     ,
+ SLP2OCEAN       = F,
+ CONSERVATION_CHECK      = T,
+ T_RANGE_MELT    =   10.0000000000000     ,
+ CM2_BUGS        = F,
+ KS      =  0.310000000000000     ,
+ H_LO_LIM        =  1.000000000000000E-010,
+ VERBOSE = F,
+ DO_ICEBERGS     = F,
+ ADD_DIURNAL_SW  = T,
+ IO_LAYOUT       = 2*0,
+ CHANNEL_VISCOSITY       =  0.000000000000000E+000,
+ SMAG_OCN        =  0.150000000000000     ,
+ SSH_GRAVITY     =   9.81000000000000     ,
+ CHAN_CFL_LIMIT  =  0.250000000000000     ,
+ DO_SUN_ANGLE_FOR_ALB    = F,
+ MASK_TABLE      = INPUT/ice_mask_table                                                                                                            ,
+ REPRODUCE_SIENA_201303  = T
+ /
+
+================================================================================
+$Id: ice_type.F90,v 20.0 2013/12/13 23:28:32 fms Exp $
+$Name: tikal $
+
+ice model domain decomposition:    24 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ice_nohalo domain decomposition:    24 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+================================================================================
+$Id$
+$Name$
+ &ASTRONOMY_NML
+ ECC     =  1.671000000000000E-002,
+ OBLIQ   =   23.4390000000000     ,
+ PER     =   102.932000000000     ,
+ PERIOD  =           0,
+ YEAR_AE =        1998,
+ MONTH_AE        =           9,
+ DAY_AE  =          23,
+ HOUR_AE =           5,
+ MINUTE_AE       =          37,
+ SECOND_AE       =           0,
+ NUM_ANGLES      =        3600
+ /
+ &DATA_OVERRIDE_NML
+ DEBUG_DATA_OVERRIDE     = T,
+ GRID_CENTER_BUG = F
+ /
+ &OCEAN_PARAMETERS_NML
+ CP_OCEAN        =   3992.10322329649     ,
+ CP_LIQUID_RUNOFF        =   4218.00000000000     ,
+ CP_SOLID_RUNOFF =   2106.00000000000     ,
+ RHO0    =   1035.00000000000     ,
+ TFREEZE =   273.150000000000     ,
+ OMEGA_EARTH     =  7.292100000000000E-005,
+ GRAV    =   9.80000000000000     
+ /
+
+$Id: ocean_parameters.F90,v 20.0 2013/12/14 00:10:55 fms Exp $
+
+
+================================================================================
+$Id: ocean_model.F90,v 20.0 2013/12/14 00:10:47 fms Exp $
+$Name: tikal $
+ &OCEAN_MODEL_NML
+ TIME_TENDENCY   = twolevel                        ,
+ IMPOSE_INIT_FROM_RESTART        = F,
+ REINITIALIZE_THICKNESS  = F,
+ BAROCLINIC_SPLIT        =           1,
+ BAROTROPIC_SPLIT        =          80,
+ SURFACE_HEIGHT_SPLIT    =           1,
+ LAYOUT  =           6,           4,
+ IO_LAYOUT       = 2*0,
+ DEBUG   = F,
+ VERTICAL_COORDINATE     = zstar                           ,
+ DT_OCEAN        =        5400,
+ CMIP_UNITS      = F,
+ HORIZONTAL_GRID = bgrid                           ,
+ USE_BLOBS       = F,
+ USE_VELOCITY_OVERRIDE   = F,
+ MASK_TABLE      = INPUT/ocean_mask_table                                                                                                          ,
+ INTRODUCE_BLOBS = F,
+ BETA_TXTY       =  0.000000000000000E+000,
+ BETA_TF =  0.000000000000000E+000,
+ BETA_QF =  0.000000000000000E+000,
+ BETA_LWSW       =  0.000000000000000E+000,
+ IMPOSE_INIT     = F
+ /
+
+================================================================================
+$Id: ocean_grids.F90,v 20.0 2013/12/14 00:10:44 fms Exp $
+$Name: tikal $
+ &OCEAN_GRIDS_NML
+ DEBUG_THIS_MODULE       = T,
+ VERBOSE_INIT    = T,
+ READ_RHO0_PROFILE       = F,
+ DO_BITWISE_EXACT_SUM    = F,
+ WRITE_GRID      = F
+ /
+
+================================================================================
+$Id: ocean_domains.F90,v 20.0 2013/12/14 00:10:42 fms Exp $
+$Name: tikal $
+ &OCEAN_DOMAINS_NML
+ HALO    =           1,
+ MAX_TRACERS     =          10,
+ X_CYCLIC_OFFSET =           0,
+ Y_CYCLIC_OFFSET =           0
+ /
+
+mom_domain domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ocean_super_grid domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+CVS $Id: ocean_topog.F90,v 20.0 2013/12/14 00:12:35 fms Exp $
+
+ &OCEAN_TOPOG_NML
+ FLAT_BOTTOM     = F,
+ FLAT_BOTTOM_KMT =          50,
+ FLAT_BOTTOM_HT  =   5500.00000000000     ,
+ WRITE_TOPOG     = F,
+ MIN_THICKNESS   =   5.00000000000000     ,
+ KMT_RECOMPUTE   = F,
+ KMT_RECOMPUTE_OFFSET    =           0,
+ DEBUG_THIS_MODULE       = T
+ /
+ &OCEAN_OBC_NML
+ NOBC    =           0,
+ DIRECTION       =                                         ,
+ NAME    = test_obc                        none                            none                            none                            ,
+ IS      = 4*-999,
+ IE      = 4*-999,
+ JS      = 4*-999,
+ JE      = 4*-999,
+ IERS    = 4*-999,
+ IERE    = 4*-999,
+ JERS    = 4*-999,
+ JERE    = 4*-999,
+ ITRS    = 4*-999,
+ ITRE    = 4*-999,
+ JTRS    = 4*-999,
+ JTRE    = 4*-999,
+ OBC_NOR = NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          ,
+ OBC_TAN = NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          ,
+ OBC_ETA = NOTHIN                                                                                                                          NOTHIN                                                                                                                          NOTHIN                                                                                                                          NOTHIN                                                                                                                          ,
+ OBC_UD  = NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          ,
+ OBC_TRA = NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                               
+            NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                              
+             NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                             
+              NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                            
+               NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                           
+                ,
+ OBC_MIX = NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          NOGRAD                                                                                                                          ,
+ REL_COEF_ETA_IN = 4*0.000000000000000E+000  ,
+ REL_COEF_ETA_OUT        = 4*0.000000000000000E+000  ,
+ REL_ETA_PNTS    = 4*1,
+ REL_CLIN_PNTS   = 40*1,
+ CTROP_MAX       = 4*1.50000000000000        ,
+ CTROP_MIN       = 4*0.100000000000000       ,
+ CTROP_INC       = 4*0.000000000000000E+000  ,
+ CTROP_SMOOTH    = 4*0.700000000000000       ,
+ FILENAME_ETA    = obc_eta_t.nc                                                                                                                                                                                                                                                    none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                         
+                    ,
+ FIELDNAME_ETA   = eta_t                           none                            none                            none                            ,
+ FILENAME_UD     = obc_ud.nc                                                                                                                                                                                                                                                       none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                         
+                    ,
+ FIELDNAME_UD    = ud                              none                            none                            none                            ,
+ OBC_CONSIDER_CONVU      = 4*F,
+ OBC_ADJUST_FORCING_BT   = 4*F,
+ OBC_VERT_ADVEL_T        = 4*F,
+ OBC_VERT_ADVEL_U        = 4*F,
+ OBC_ENHANCE_VISC_BACK   = NONE                                                                                                                            NONE                                                                                                                            NONE                                                                                                                            NONE                                                                                                                            ,
+ OBC_ENHANCE_DIFF_BACK   = NONE            NONE            NONE            NONE            ,
+ ENH_PNTS        = 4*1,
+ ENH_FAC_V       = 4*0.900000000000000       ,
+ ENH_FAC_D       = 4*1.00000000000000        ,
+ OBC_RELAX_TRACER        = 40*F,
+ OBC_FLOW_RELAX  = 40*1,
+ OBC_CONSIDER_SOURCES    = 40*F,
+ OBC_TRACER_NO_INFLOW    = 40*F,
+ REL_COEF_TRACER_IN      = 40*0.000000000000000E+000  ,
+ REL_COEF_TRACER_OUT     = 40*0.000000000000000E+000  ,
+ FILENAME_TRACER = INPUT/obc_tr.nc                                                                                                                                                                                                                                                 INPUT/obc_tr.nc                                                                                                                                                                                                                                                 INPUT/obc_tr.nc                                                                                                                                                                                                                                                 INPUT/obc_tr.nc                                                                                                                                                                                                                              
+                    INPUT/obc_tr.nc                                                                                                                                                                                                                                                 INPUT/obc_tr.nc                                                                                                                                                                                                                                                 INPUT/obc_tr.nc                                                                                                                                                                                                                                                 INPUT/obc_tr.nc                                                                                                                                                                                                                             
+                     none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                       
+                      none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                      
+                       none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                     
+                        none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                    
+                         none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                   
+                          none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                  
+                           none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                 
+                            none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                                            none                                                                                                                                                                                                                                
+                             ,
+ FIELDNAME_TRACER        = temp_obc                        temp_obc                        temp_obc                        temp_obc                        salt_obc                        salt_obc                        salt_obc                        salt_obc                        none                            none                            none                            none                            none                            none                            none                            none                            none                            none                            none                            none                            none                            none                            none                            none                            none                            none                            none                            none                            none                            none                            none                            none 
+                            none                            none                            none                            none                            none                            none                            none                            none                            ,
+ DEBUG_PHASE_SPEED       = F,
+ DEBUG_THIS_MODULE       = F,
+ OBC_DAMP_NEWTON = 4*F,
+ DAMP_FACTOR     = 4*1.00000000000000        
+ /
+
+================================================================================
+$ID$
+$Name: tikal $
+
+CVS $Id
+
+
+================================================================================
+$Id: ocean_types.F90,v 20.0 2013/12/14 00:12:37 fms Exp $
+$Name: tikal $
+
+CVS $Id
+
+ &OCEAN_TRACER_UTIL_NML
+ REBIN_ONTO_RHO_ALL_VALUES       = T,
+ DEBUG_DIAGNOSE_MASS_OF_LAYER    = F,
+ EPSLN_DIAGNOSE_MASS_OF_LAYER    =  1.000000000000000E-005
+ /
+
+================================================================================
+$Id: ocean_coriolis.F90,v 20.0 2013/12/14 00:10:38 fms Exp $
+$Name: tikal $
+ &OCEAN_CORIOLIS_NML
+ DEBUG_THIS_MODULE       = F,
+ USE_THIS_MODULE = T,
+ ACOR    =  0.500000000000000     
+ /
+
+================================================================================
+$Id: ocean_velocity.F90,v 20.0 2013/12/14 00:12:41 fms Exp $
+$Name: tikal $
+ &OCEAN_VELOCITY_NML
+ DEBUG_THIS_MODULE       = F,
+ WRITE_A_RESTART = T,
+ MAX_CGINT       =   2.00000000000000     ,
+ ZERO_TENDENCY   = F,
+ ZERO_TENDENCY_EXPLICIT_A        = F,
+ ZERO_TENDENCY_EXPLICIT_B        = F,
+ ZERO_TENDENCY_IMPLICIT  = F,
+ TRUNCATE_VELOCITY       = F,
+ TRUNCATE_VERBOSE        = T,
+ TRUNCATE_VELOCITY_LAT   =  0.000000000000000E+000,
+ TRUNCATE_VELOCITY_VALUE =   2.00000000000000     ,
+ ADAMS_BASHFORTH_THIRD   = T,
+ ADAMS_BASHFORTH_EPSILON =  0.600000000000000     ,
+ USE_CONSTANT_VELOCITY   = F,
+ CONSTANT_U      =  0.000000000000000E+000,
+ CONSTANT_V      =  0.000000000000000E+000,
+ UPDATE_VELOCITY_VIA_UPRIME      = T
+ /
+
+================================================================================
+$Id: ocean_barotropic.F90,v 20.0 2013/12/14 00:10:34 fms Exp $
+$Name: tikal $
+ &OCEAN_BAROTROPIC_NML
+ WRITE_A_RESTART = T,
+ ZERO_TENDENCY   = F,
+ ZERO_ETA_IC     = F,
+ ZERO_ETA_T      = F,
+ ZERO_ETA_U      = F,
+ ZERO_CORIOLIS_BT        = F,
+ ZERO_NONLINEAR_FORCING_BT       = F,
+ ZERO_FORCING_BT = F,
+ ZERO_ETA_TENDENCY       = F,
+ BAROTROPIC_TIME_STEPPING_A      = T,
+ BAROTROPIC_TIME_STEPPING_B      = F,
+ TIDAL_FORCING_M2        = F,
+ TIDAL_FORCING_8 = F,
+ TIDAL_FORCING_IDEAL     = F,
+ GEOID_FORCING   = F,
+ ALPHAT  =  0.948000000000000     ,
+ PRED_CORR_GAMMA =  0.200000000000000     ,
+ SMOOTH_ETA_T_BT_LAPLACIAN       = F,
+ SMOOTH_ETA_T_BT_BIHARMONIC      = F,
+ SMOOTH_ETA_T_LAPLACIAN  = F,
+ SMOOTH_ETA_T_BIHARMONIC = T,
+ SMOOTH_ANOMPB_BT_LAPLACIAN      = F,
+ SMOOTH_ANOMPB_BT_BIHARMONIC     = F,
+ SMOOTH_PBOT_T_LAPLACIAN = F,
+ SMOOTH_PBOT_T_BIHARMONIC        = T,
+ SMOOTH_PBOT_T_BIHARMONIC_LEGACY = F,
+ SMOOTH_ETA_DIAG_LAPLACIAN       = T,
+ SMOOTH_ETA_DIAG_BIHARMONIC      = F,
+ VEL_MICOM_LAP   =  5.000000000000000E-002,
+ VEL_MICOM_LAP_DIAG      =   1.00000000000000     ,
+ VEL_MICOM_BIH   =  1.000000000000000E-002,
+ VEL_MICOM_BIH_DIAG      =  0.100000000000000     ,
+ TRUNCATE_ETA    = F,
+ VERBOSE_TRUNCATE        = T,
+ ETA_MAX =   8.00000000000000     ,
+ FRAC_CRIT_CELL_HEIGHT   =  0.200000000000000     ,
+ VERBOSE_INIT    = T,
+ DEBUG_THIS_MODULE       = F,
+ DIAG_STEP       =        2400,
+ ETA_OFFSET      =  1.000000000000000E-012,
+ PBOT_OFFSET     =  1.000000000000000E-012,
+ INITSUM_WITH_BAR_MOM4P0 = F,
+ INITSUM_WITH_BAR_MOM4P1 = T,
+ IDEAL_INITIAL_ETA       = F,
+ IDEAL_INITIAL_ETA_AMPLITUDE     =   5.00000000000000     ,
+ IDEAL_INITIAL_ETA_XWIDTH        =   100000.000000000     ,
+ IDEAL_INITIAL_ETA_YWIDTH        =   100000.000000000     ,
+ UDRHO_BT_LAP    = F,
+ UDRHO_BT_BIH    = F,
+ UDRHO_LAP       = F,
+ UDRHO_BIH       = F,
+ UDRHO_LAP_VEL_MICOM     =  5.000000000000000E-002,
+ UDRHO_BIH_VEL_MICOM     =  1.000000000000000E-002,
+ BAROTROPIC_HALO =           1,
+ DO_BITWISE_EXACT_SUM    = F,
+ USE_LEGACY_BAROTROPIC_HALOS     = T
+ /
+
+horz diff flux domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+================================================================================
+$Id: ocean_thickness.F90,v 20.0 2013/12/14 00:12:33 fms Exp $
+$Name: tikal $
+ &OCEAN_THICKNESS_NML
+ DEBUG_THIS_MODULE       = F,
+ DEBUG_THIS_MODULE_DETAIL        = F,
+ WRITE_A_RESTART = T,
+ FULL_STEP_TOPOGRAPHY    = F,
+ INITIALIZE_ZERO_ETA     = F,
+ ENFORCE_POSITIVE_DZT    = F,
+ DEPTH_MIN_FOR_SIGMA     =  1.000000000000000E-002,
+ THICKNESS_METHOD        = energetic                       ,
+ READ_RHO0_PROFILE       = F,
+ THICKNESS_DZT_MIN       =   2.00000000000000     ,
+ THICKNESS_DZT_MIN_INIT  =   2.00000000000000     ,
+ RESCALE_MASS_TO_GET_HT_MOD      = F,
+ PBOT0_SIMPLE    = F,
+ EPSILON_INIT_THICKNESS  =  1.000000000000000E-005,
+ READ_RESCALE_RHO0_MASK  = T,
+ RESCALE_RHO0_MASK_GFDL  = T,
+ RESCALE_RHO0_BASIN_LABEL        =   7.00000000000000     ,
+ RESCALE_RHO0_VALUE      =  0.750000000000000     ,
+ LINEAR_FREE_SURFACE     = F,
+ MAX_NUM_BAD_PRINT       =          25,
+ UPDATE_DZWU_K0  = T
+ /
+ &OCEAN_OPERATORS_NML
+ USE_LEGACY_DIV_UD       = F
+ /
+
+horz diff flux domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+$Id: ocean_operators.F90,v 20.0 2013/12/14 00:10:53 fms Exp $
+
+
+CVS $Id: ocean_tracer.F90,v 20.0 2013/12/14 00:17:20 fms Exp $
+
+ &OCEAN_TRACER_NML
+ DEBUG_THIS_MODULE       = F,
+ ZERO_TENDENCY   = F,
+ ZERO_TRACER_SOURCE      = F,
+ WRITE_A_RESTART = T,
+ OCEAN_TPM_DEBUG = F,
+ TMASK_LIMIT_TS_SAME     = T,
+ REMAP_DEPTH_TO_S_INIT   = F,
+ INFLOW_NBOUNDARY        = F,
+ INTERPOLATE_TPROG_TO_PBOTT      = T,
+ INTERPOLATE_TDIAG_TO_PBOTT      = F,
+ LIMIT_AGE_TRACER        = T,
+ AGE_TRACER_MAX_INIT     =  0.000000000000000E+000,
+ FRAZIL_HEATING_BEFORE_VPHYSICS  = F,
+ FRAZIL_HEATING_AFTER_VPHYSICS   = T,
+ COMPUTE_TMASK_LIMIT_ON  = T,
+ USE_TEMPSALT_CHECK_RANGE        = F
+ /
+
+================================================================================
+$Id: ocean_tempsalt.F90,v 20.0 2013/12/14 00:17:14 fms Exp $
+$Name: tikal $
+ &OCEAN_TEMPSALT_NML
+ DEBUG_THIS_MODULE       = F,
+ TEMPERATURE_VARIABLE    = potential_temp                  ,
+ POTTEMP_2ND_ITERATION   = T,
+ POTTEMP_EQUAL_CONTEMP   = F,
+ T_MIN   =  -15.0000000000000     ,
+ T_MAX   =   55.0000000000000     ,
+ S_MIN   =  -1.00000000000000     ,
+ S_MAX   =   55.0000000000000     ,
+ T_MIN_LIMIT     =  -1.90000000000000     ,
+ T_MAX_LIMIT     =   32.0000000000000     ,
+ S_MIN_LIMIT     =   5.00000000000000     ,
+ S_MAX_LIMIT     =   42.0000000000000     ,
+ REINIT_TS_WITH_IDEAL    = F,
+ REINIT_TS_WITH_IDEAL_EFOLD      =   1000.00000000000     ,
+ REINIT_TS_WITH_IDEAL_TVALUE     =   10.0000000000000     ,
+ REINIT_TS_WITH_IDEAL_SVALUE     =   30.0000000000000     ,
+ TEOS10  = F
+ /
+
+CVS $$
+
+ &OCEAN_FRAZIL_NML
+ USE_THIS_MODULE = T,
+ DEBUG_THIS_MODULE       = F,
+ FREEZING_TEMP_SIMPLE    = T,
+ FREEZING_TEMP_PRETEOS10 = F,
+ FREEZING_TEMP_TEOS10    = F,
+ FRAZIL_FACTOR   =   1.00000000000000     ,
+ AIR_SATURATED_WATER     = T,
+ FRAZIL_ONLY_IN_SURFACE  = T
+ /
+
+================================================================================
+$Id: ocean_advection_velocity.F90,v 20.0.4.1 2014/01/22 17:19:10 smg Exp $
+$Name: mom5_tikal_22jan2014_smg $
+ &OCEAN_ADVECTION_VELOCITY_NML
+ DEBUG_THIS_MODULE       = F,
+ MAX_ADVECTION_VELOCITY  =  0.500000000000000     ,
+ INFLOW_NBOUNDARY        = F,
+ READ_ADVECTION_VELOCITY = F,
+ READ_ADVECTION_TRANSPORT        = F,
+ CONSTANT_ADVECTION_VELOCITY     = F
+ /
+
+================================================================================
+$Id: ocean_density.F90,v 20.0 2013/12/14 00:10:40 fms Exp $
+$Name: tikal $
+ &OCEAN_DENSITY_NML
+ S_TEST  =   20.0000000000000     ,
+ T_TEST  =   20.0000000000000     ,
+ P_TEST  =   1000.00000000000     ,
+ PRESS_STANDARD  =  0.000000000000000E+000,
+ SN_TEST =   35.0000000000000     ,
+ TN_TEST =   20.0000000000000     ,
+ EOS_LINEAR      = F,
+ ALPHA_LINEAR_EOS        =  0.255000000000000     ,
+ BETA_LINEAR_EOS =  0.000000000000000E+000,
+ EOS_PRETEOS10   = T,
+ EOS_TEOS10      = F,
+ POTRHO_PRESS    =   2000.00000000000     ,
+ POTRHO_MIN      =   1028.00000000000     ,
+ POTRHO_MAX      =   1038.00000000000     ,
+ NEUTRALRHO_MIN  =   1020.00000000000     ,
+ NEUTRALRHO_MAX  =   1030.00000000000     ,
+ LAYER_NK        =          80,
+ THETA_MIN       =  -2.00000000000000     ,
+ THETA_MAX       =   30.0000000000000     ,
+ DEBUG_THIS_MODULE       = F,
+ WRITE_A_RESTART = T,
+ RHO0_DENSITY    = F,
+ DENSITY_EQUAL_POTRHO    = F,
+ BUOYFREQ_SMOOTH_VERT    = T,
+ NUM_121_PASSES  =           1,
+ EPSLN_DRHODZ    =  1.000000000000000E-010,
+ MASK_DOMAIN_RESTART     = F,
+ DO_BITWISE_EXACT_SUM    = F,
+ DRHODZ_DIAG_STABLE      = T,
+ EPSLN_DRHODZ_DIAG       =  1.000000000000000E-010,
+ GRAD_NRHO_LRPOTRHO_COMPUTE      = F,
+ GRAD_NRHO_LRPOTRHO_MAX  =   10.0000000000000     ,
+ GRAD_NRHO_LRPOTRHO_MIN  =   1.00000000000000     ,
+ NEUTRAL_DENSITY_OMEGA   = F,
+ NEUTRAL_DENSITY_POTRHO  = T,
+ SMOOTH_STRATIFICATION_FACTOR    = F,
+ UPDATE_DIAGNOSTIC_FACTORS       = F,
+ SMAX_DIAG       =  -1.00000000000000     ,
+ SMAX_MIN_IN_COLUMN      = F
+ /
+ &OCEAN_BLOB_NML
+ BLOB_SMALL_MASS =   1000.00000000000     ,
+ DEBUG_THIS_MODULE       = F,
+ REALLY_DEBUG    = F,
+ DO_BITWISE_EXACT_SUM    = F,
+ BITWISE_REPRODUCTION    = F,
+ MAX_PROP_THICKNESS      =  0.700000000000000     
+ /
+
+================================================================================
+$Id: ocean_pressure.F90,v 20.0 2013/12/14 00:10:57 fms Exp $
+$Name: tikal $
+ &OCEAN_PRESSURE_NML
+ DEBUG_THIS_MODULE       = F,
+ ZERO_PRESSURE_FORCE     = F,
+ ZERO_CORRECTION_TERM_GRAD       = F,
+ ZERO_DIAGONAL_PRESS_GRAD        = F,
+ ZERO_ETA_OVER_H_ZSTAR_PRESSURE  = F
+ /
+
+================================================================================
+$Id: ocean_vert_mix.F90,v 20.0 2013/12/14 00:16:48 fms Exp $
+$Name: tikal $
+ &OCEAN_VERT_MIX_NML
+ DEBUG_THIS_MODULE       = F,
+ VERT_MIX_SCHEME = kpp_mom4p1,
+ VERBOSE_INIT    = T,
+ AIDIF   =   1.00000000000000     ,
+ VERT_DIFF_BACK_VIA_MAX  = T,
+ USE_EXPLICIT_VERT_DIFFUSE       = T,
+ USE_DIFF_CBT_TABLE      = F,
+ LINEAR_TAPER_DIFF_CBT_TABLE     = F,
+ BRYAN_LEWIS_DIFFUSIVITY = T,
+ BRYAN_LEWIS_LAT_DEPEND  = T,
+ BRYAN_LEWIS_LAT_TRANSITION      =   35.0000000000000     ,
+ AFKPH_90        =  0.725000000000000     ,
+ DFKPH_90        =   1.15000000000000     ,
+ SFKPH_90        =  4.500000000000000E-005,
+ ZFKPH_90        =   250000000.000000     ,
+ AFKPH_00        =  0.675000000000000     ,
+ DFKPH_00        =   1.15000000000000     ,
+ SFKPH_00        =  4.500000000000000E-005,
+ ZFKPH_00        =   250000000.000000     ,
+ VERT_VISC_BACK  = F,
+ VISC_CBU_BACK_MAX       =  1.000000000000000E-002,
+ VISC_CBU_BACK_MIN       =  1.000000000000000E-003,
+ VISC_CBU_BACK_ZMID      =   50.0000000000000     ,
+ VISC_CBU_BACK_ZWID      =   30.0000000000000     ,
+ HWF_DIFFUSIVITY = F,
+ HWF_DEPTH_TRANSITION    =   25000000.0000000     ,
+ HWF_MIN_DIFFUSIVITY     =  2.000000000000000E-006,
+ HWF_30_DIFFUSIVITY      =  2.000000000000000E-005,
+ HWF_N0_2OMEGA   =   20.0000000000000     ,
+ HWF_DIFFUSIVITY_3D      = F,
+ DIFF_CBT_TANH   = F,
+ DIFF_CBT_TANH_MAX       =  1.000000000000000E-003,
+ DIFF_CBT_TANH_MIN       =  2.000000000000000E-005,
+ DIFF_CBT_TANH_ZMID      =   150.000000000000     ,
+ DIFF_CBT_TANH_ZWID      =   30.0000000000000     ,
+ QUEBEC_2009_10_BUG      = F,
+ VMIX_RESCALE_NONBOUSS   = F,
+ VMIX_SET_MIN_DISSIPATION        = F,
+ VMIX_MIN_DISS_CONST     =  1.000000000000000E-007,
+ VMIX_MIN_DISS_BVFREQ_SCALE      =  5.999999999999999E-004,
+ VMIX_MIN_DISS_FLUX_RI_MAX       =  0.200000000000000     ,
+ SMOOTH_RHO_N2   = T,
+ NUM_121_PASSES  =           1
+ /
+
+CVS $Id
+
+ &OCEAN_VERT_UTIL_NML
+ DEBUG_THIS_MODULE       = F,
+ SMOOTH_N2       = T,
+ SMOOTH_RI_NUMBER        = T,
+ NUM_N2_SMOOTH   =           1,
+ NUM_RI_SMOOTH   =           1
+ /
+
+================================================================================
+$$
+$Name: tikal $
+ &OCEAN_VERT_TIDAL_NML
+ USE_THIS_MODULE = T,
+ USE_LEGACY_METHODS      = F,
+ DEBUG_THIS_MODULE       = F,
+ USE_WAVE_DISSIPATION    = T,
+ USE_DRAG_DISSIPATION    = T,
+ READ_ROUGHNESS  = T,
+ READ_TIDE_SPEED = T,
+ DEFAULT_ROUGHNESS_LENGTH        =   25.0000000000000     ,
+ DEFAULT_TIDE_SPEED      =  1.000000000000000E-002,
+ SHELF_DEPTH_CUTOFF      =   160.000000000000     ,
+ DECAY_SCALE     =   300.000000000000     ,
+ ROUGHNESS_SCALE =   30000.0000000000     ,
+ TIDAL_DISS_EFFICIENCY   =  0.333330000000000     ,
+ MIXING_EFFICIENCY       =  0.200000000000000     ,
+ MIXING_EFFICIENCY_N2DEPEND      = T,
+ MUNK_ANDERSON_P =  0.250000000000000     ,
+ MUNK_ANDERSON_SIGMA     =   3.00000000000000     ,
+ DRAG_DISSIPATION_EFOLD  = T,
+ DRAG_DISSIPATION_TIDE_PERIOD    =   43200.0000000000     ,
+ DRAG_MASK_DEEP  = T,
+ DRAG_MASK_DEEP_RATIO    =  0.100000000000000     ,
+ BOTTOM_DRAG_CD  =  2.400000000000000E-003,
+ DRHODZ_MIN      =  1.000000000000000E-012,
+ SPEED_MIN       =  5.000000000000000E-003,
+ BACKGROUND_DIFFUSIVITY  =  0.000000000000000E+000,
+ BACKGROUND_VISCOSITY    =  1.000000000000000E-004,
+ MAX_WAVE_DIFFUSIVITY    =  1.000000000000000E-002,
+ MAX_DRAG_DIFFUSIVITY    =  5.000000000000000E-003,
+ SMOOTH_BVFREQ_BOTTOM    = T,
+ VEL_MICOM_SMOOTH        =  0.200000000000000     ,
+ SMOOTH_RHO_N2   = T,
+ NUM_121_PASSES  =           1,
+ WAVE_DIFFUSIVITY_MONOTONIC      = T,
+ TIDE_SPEED_DATA_ON_T_GRID       = T,
+ READING_ROUGHNESS_AMP   = T,
+ READING_ROUGHNESS_LENGTH        = F,
+ READ_WAVE_DISSIPATION   = F,
+ FIXED_WAVE_DISSIPATION  = F,
+ WAVE_ENERGY_FLUX_MAX    =  0.100000000000000     ,
+ USE_LEEWAVE_DISSIPATION = F,
+ READ_LEEWAVE_DISSIPATION        = F,
+ DRAG_DISSIPATION_USE_CDBOT      = F
+ /
+
+================================================================================
+$Id: ocean_vert_kpp_mom4p1.F90,v 20.0 2013/12/14 00:16:44 fms Exp $
+$Name: tikal $
+ &OCEAN_VERT_KPP_MOM4P1_NML
+ USE_THIS_MODULE = T,
+ SHEAR_INSTABILITY       = T,
+ DOUBLE_DIFFUSION        = T,
+ DIFF_CBT_IW     =  0.000000000000000E+000,
+ VISC_CBU_IW     =  0.000000000000000E+000,
+ VISC_CBU_LIMIT  =  5.000000000000000E-003,
+ DIFF_CBT_LIMIT  =  5.000000000000000E-003,
+ VISC_CON_LIMIT  =  0.100000000000000     ,
+ DIFF_CON_LIMIT  =  0.100000000000000     ,
+ CONCV   =   1.80000000000000     ,
+ RICR    =  0.300000000000000     ,
+ NON_LOCAL_KPP   = T,
+ SMOOTH_BLMC     = T,
+ LGAM    =   1.04000000000000     ,
+ CW_0    =  0.150000000000000     ,
+ L_SMYTH =   2.00000000000000     ,
+ LTMAX   =   5.00000000000000     ,
+ WSTFAC  =  0.600000000000000     ,
+ KL_MIN  =           2,
+ KBL_STANDARD_METHOD     = T,
+ DEBUG_THIS_MODULE       = F,
+ LIMIT_WITH_HEKMAN       = T,
+ LIMIT_GHATS     = F,
+ HBL_WITH_RIT    = F,
+ RADIATION_LARGE = F,
+ RADIATION_ZERO  = F,
+ RADIATION_IOW   = F,
+ USE_SBL_BOTTOM_FLUX     = F,
+ WSFC_COMBINE_RUNOFF_CALVE       = T,
+ BVF_FROM_BELOW  = F,
+ VARIABLE_VTC    = F,
+ USE_MAX_SHEAR   = F,
+ LINEAR_HBL      = T,
+ CALC_VISC_ON_CGRID      = F,
+ SMOOTH_RI_KMAX_EQ_KMU   = F,
+ DO_LANGMUIR     = F
+ /
+
+================================================================================
+=>Using: /bih/ocean_bih_tracer.F90 ($Id: ocean_bih_tracer.F90,v 20.0 2013/12/14 00:14:10 fms Exp $)
+$Name: tikal $
+ &OCEAN_BIH_TRACER_NML
+ USE_THIS_MODULE = F,
+ ABIH    =  0.000000000000000E+000,
+ TRACER_MIX_MICOM        = F,
+ VEL_MICOM       =  0.000000000000000E+000,
+ READ_DIFFUSIVITY_MASK   = F,
+ HORZ_Z_DIFFUSE  = F,
+ HORZ_S_DIFFUSE  = T
+ /
+
+================================================================================
+$Id: ocean_lap_tracer.F90,v 20.0 2013/12/14 00:14:20 fms Exp $
+$Name: tikal $
+ &OCEAN_LAP_TRACER_NML
+ USE_THIS_MODULE = F,
+ ALAP    =  0.000000000000000E+000,
+ TRACER_MIX_MICOM        = F,
+ VEL_MICOM       =  0.000000000000000E+000,
+ VERBOSE_INIT    = T,
+ READ_DIFFUSIVITY_MASK   = F,
+ HORZ_Z_DIFFUSE  = F,
+ HORZ_S_DIFFUSE  = T
+ /
+
+================================================================================
+$Id: ocean_sigma_transport.F90,v 20.0 2013/12/14 00:14:30 fms Exp $
+$Name: tikal $
+ &OCEAN_SIGMA_TRANSPORT_NML
+ USE_THIS_MODULE = T,
+ DEBUG_THIS_MODULE       = F,
+ TMASK_SIGMA_ON  = F,
+ SIGMA_DIFFUSION_ON      = T,
+ SIGMA_ADVECTION_ON      = F,
+ SIGMA_ADVECTION_SGS_ONLY        = F,
+ SIGMA_ADVECTION_CHECK   = T,
+ THICKNESS_SIGMA_LAYER   =   100.000000000000     ,
+ THICKNESS_SIGMA_MAX     =   100.000000000000     ,
+ THICKNESS_SIGMA_MIN     =   100.000000000000     ,
+ SIGMA_DIFFUSIVITY       =   1000.00000000000     ,
+ SIGMA_DIFFUSIVITY_RATIO =  1.000000000000000E-006,
+ TRACER_MIX_MICOM        = T,
+ VEL_MICOM       =  5.000000000000000E-002,
+ VERBOSE_INIT    = T,
+ SIGMA_JUST_IN_BOTTOM_CELL       = T,
+ CAMPINGOOSE_MU  =  1.000000000000000E-004,
+ CAMPINGOOSE_DELTA       =  0.333300000000000     ,
+ SIGMA_UMAX      =  1.000000000000000E-002,
+ WRITE_A_RESTART = T,
+ SMOOTH_SIGMA_THICKNESS  = T,
+ SMOOTH_SIGMA_VELOCITY   = T,
+ SMOOTH_VELMICOM =  0.200000000000000     
+ /
+
+flux dom sigma domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+================================================================================
+$Id: ocean_nphysics.F90,v 20.0 2013/12/14 00:14:34 fms Exp $
+$Name: tikal $
+ &OCEAN_NPHYSICS_NML
+ USE_THIS_MODULE = T,
+ DEBUG_THIS_MODULE       = F,
+ WRITE_A_RESTART = T,
+ USE_NPHYSICSA   = F,
+ USE_NPHYSICSB   = T,
+ USE_NPHYSICSC   = F
+ /
+
+================================================================================
+$Id: ocean_nphysics_util.F90,v 20.0 2013/12/14 00:14:52 fms Exp $
+$Name: tikal $
+ &OCEAN_NPHYSICS_UTIL_NML
+ DEBUG_THIS_MODULE       = F,
+ NPHYSICS_UTIL_ZERO_INIT = T,
+ SMAX    =  5.000000000000000E-003,
+ SWIDTH  =  2.000000000000000E-003,
+ EPSLN_DRHODZ    =  1.000000000000000E-030,
+ DRHODZ_MOM4P1   = T,
+ DRHODZ_SMOOTH_HORZ      = F,
+ DRHODZ_SMOOTH_VERT      = F,
+ NUM_121_PASSES  =           1,
+ AREDI   =   600.000000000000     ,
+ AGM     =   800.000000000000     ,
+ AREDI_EQUAL_AGM = F,
+ TRACER_MIX_MICOM        = F,
+ VEL_MICOM       =  0.000000000000000E+000,
+ BRYAN_LEWIS_AREDI       = F,
+ AHS     =  0.000000000000000E+000,
+ AHB     =  0.000000000000000E+000,
+ NEUTRAL_HORZ_MIX_BDY    = F,
+ VEL_MICOM_BDY   =  0.000000000000000E+000,
+ AH_BDY  =  0.000000000000000E+000,
+ AGM_LAT_BANDS   = F,
+ AGM_LAT_BANDS_BOUNDARY  =  -999.000000000000     ,
+ AGM_LAT_BANDS_RATIO     =   1.00000000000000     ,
+ ROSSBY_RADIUS_MAX       =   100000.000000000     ,
+ ROSSBY_RADIUS_MIN       =   15000.0000000000     ,
+ AGM_READ_RESTART        = F,
+ AGM_CLOSURE     = T,
+ AGM_CLOSURE_SCALING     =  7.000000000000001E-002,
+ AGM_CLOSURE_MAX =   800.000000000000     ,
+ AGM_CLOSURE_MIN =   100.000000000000     ,
+ AGM_CLOSURE_GROWTH_SCALE        =  0.500000000000000     ,
+ AGM_CLOSURE_LENGTH_FIXED        = F,
+ AGM_CLOSURE_LENGTH      =   50000.0000000000     ,
+ AGM_CLOSURE_LENGTH_ROSSBY       = F,
+ AGM_CLOSURE_LENGTH_BCZONE       = F,
+ BCZONE_MAX_PTS  =          10,
+ AGM_CLOSURE_BCZONE_CRIT_RATE    =  1.400000000000000E-006,
+ AGM_CLOSURE_EDEN_GREATBATCH     = F,
+ AGM_CLOSURE_EDEN_GAMMA  =  0.000000000000000E+000,
+ AGM_CLOSURE_EDEN_LENGTH_CONST   = F,
+ AGM_CLOSURE_EDEN_LENGTH =   10000.0000000000     ,
+ AGM_CLOSURE_EADY_SMOOTH_VERT    = T,
+ AGM_CLOSURE_EADY_SMOOTH_HORZ    = T,
+ AGM_CLOSURE_EADY_AVE_MIXED      = T,
+ AGM_CLOSURE_EADY_CAP    = T,
+ AGM_CLOSURE_BAROCLINIC  = T,
+ AGM_CLOSURE_BUOY_FREQ   =  4.000000000000000E-003,
+ AGM_CLOSURE_UPPER_DEPTH =   100.000000000000     ,
+ AGM_CLOSURE_LOWER_DEPTH =   2000.00000000000     ,
+ AGM_CLOSURE_LENGTH_CAP  = F,
+ AGM_CLOSURE_LENGTH_MAX  =   50000.0000000000     ,
+ AGM_SMOOTH_SPACE        = F,
+ VEL_MICOM_SMOOTH        =  0.200000000000000     ,
+ AGM_SMOOTH_TIME = F,
+ AGM_DAMPING_TIME        =   45.0000000000000     ,
+ AGM_CLOSURE_GRID_SCALING        = T,
+ AGM_CLOSURE_GRID_SCALING_POWER  =   2.00000000000000     ,
+ AREDI_DIFFUSIVITY_GRID_SCALING  = F,
+ AGM_CLOSURE_N2_SCALE    = F,
+ AGM_CLOSURE_N2_SCALE_COEFF      =   1000.00000000000     ,
+ AGM_CLOSURE_N2_SCALE_NREF_CST   = F,
+ SMAX_GRAD_GAMMA_SCALAR  =  1.000000000000000E-002,
+ EPSLN_DRHODZ_DIAGNOSTICS        =  1.000000000000000E-007,
+ WDIANEUTRAL_SMOOTH      = T,
+ SMOOTH_ETA_TEND_GM90    = F
+ /
+
+bczone domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+================================================================================
+$Id: ocean_nphysicsB.F90,v 20.0 2013/12/14 00:14:38 fms Exp $
+$Name: tikal $
+ &OCEAN_NPHYSICSB_NML
+ USE_THIS_MODULE = T,
+ DEBUG_THIS_MODULE       = F,
+ NEUTRAL_PHYSICS_LIMIT   = T,
+ DIFFUSION_ALL_EXPLICIT  = F,
+ TMASK_NEUTRAL_ON        = F,
+ USE_GM_SKEW     = T,
+ SURF_TURB_THICK_MIN     =   50.0000000000000     ,
+ SURF_TURB_THICK_MIN_K   =           5,
+ NBLAYER_SMOOTH  = T,
+ VEL_MICOM_SMOOTH        =  0.200000000000000     ,
+ NEUTRAL_DAMPING_TIME    =   10.0000000000000     ,
+ DM_TAPER        = T,
+ GKW_TAPER       = F
+ /
+
+flux dom neutral domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+================================================================================
+$Id: ocean_nphysics_new.F90,v 20.0 2013/12/14 00:14:46 fms Exp $
+$Name: tikal $
+ &OCEAN_NPHYSICS_NEW_NML
+ USE_THIS_MODULE = F,
+ DRHODZ_SMOOTH_VERT      = F,
+ DRHODZ_SMOOTH_HORZ      = F,
+ SMAX    =  1.000000000000000E-002,
+ VEL_MICOM_SMOOTH        =  0.200000000000000     
+ /
+ &OCEAN_NPHYSICS_UTIL_NEW_NML
+ NUM_121_PASSES  =           1
+ /
+
+================================================================================
+$$
+$Name: tikal $
+ &OCEAN_SUBMESOSCALE_NML
+ USE_THIS_MODULE = T,
+ DEBUG_THIS_MODULE       = F,
+ DIAG_STEP       =        1200,
+ USE_HBLT_CONSTANT       = F,
+ USE_HBLT_EQUAL_MLD      = T,
+ SMOOTH_HBLT     = F,
+ SMOOTH_HBLT_NUM =           2,
+ CONSTANT_HBLT   =   100.000000000000     ,
+ COEFFICIENT_CE  =  7.000000000000001E-002,
+ TIME_CONSTANT   =   86400.0000000000     ,
+ FRONT_LENGTH_CONST      =   5000.00000000000     ,
+ MIN_KBLT        =           4,
+ MINIMUM_HBLT    =  0.000000000000000E+000,
+ SMOOTH_PSI      = T,
+ SMOOTH_PSI_NUM  =           2,
+ FRONT_LENGTH_DEFORM_RADIUS      = T,
+ LIMIT_PSI       = T,
+ USE_PSI_LEGACY  = F,
+ LIMIT_PSI_VELOCITY_SCALE        =  0.500000000000000     ,
+ SUBMESO_LIMIT_FLUX      = T,
+ SMOOTH_ADVECT_TRANSPORT = T,
+ SMOOTH_ADVECT_TRANSPORT_NUM     =           2,
+ SUBMESO_SKEW_FLUX       = T,
+ SUBMESO_ADVECT_FLUX     = F,
+ SUBMESO_ADVECT_UPWIND   = T,
+ SUBMESO_ADVECT_SWEBY    = F,
+ SUBMESO_ADVECT_LIMIT    = F,
+ SUBMESO_ADVECT_ZERO_BDY = F,
+ SUBMESO_DIFFUSION       = F,
+ SUBMESO_DIFFUSION_SCALE =   1.00000000000000     ,
+ SUBMESO_DIFFUSION_BIHARMONIC    = F
+ /
+
+mdfl domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+flux dom submeso domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+================================================================================
+=>Using: ocean_lap_friction.f90 ($Id: ocean_lap_friction.F90,v 20.0 2013/12/14 00:14:18 fms Exp $)
+$Name: tikal $
+ &OCEAN_LAP_FRICTION_NML
+ LAP_FRICTION_SCHEME     = general   ,
+ DEBUG_THIS_MODULE       = F,
+ WRITE_A_RESTART = T
+ /
+
+================================================================================
+=>Using: ocean_lapgen_friction.F90 ($Id: ocean_lapgen_friction.F90,v 20.0 2013/12/14 00:14:26 fms Exp $)
+$Name: tikal $
+ &OCEAN_LAPGEN_FRICTION_NML
+ USE_THIS_MODULE = T,
+ DEBUG_THIS_MODULE       = F,
+ BOTTOM_5POINT   = T,
+ K_SMAG_ISO      =  0.000000000000000E+000,
+ K_SMAG_ANISO    =  0.000000000000000E+000,
+ VEL_MICOM_ISO   =  0.100000000000000     ,
+ VEL_MICOM_ANISO =  0.000000000000000E+000,
+ EQ_VEL_MICOM_ISO        =  0.000000000000000E+000,
+ EQ_VEL_MICOM_ANISO      =  0.000000000000000E+000,
+ EQ_LAT_MICOM    =  0.000000000000000E+000,
+ EQUATORIAL_ZONAL        = F,
+ EQUATORIAL_ZONAL_LAT    =  0.000000000000000E+000,
+ EQUATORIAL_NO_SMAG      = F,
+ VISCOSITY_NCAR  = F,
+ VISCOSITY_NCAR_2000     = T,
+ VISCOSITY_NCAR_2007     = F,
+ NCAR_ISOTROPIC_OFF_EQUATOR      = F,
+ NCAR_ONLY_EQUATORIAL    = F,
+ VCONST_1        =   10000000.0000000     ,
+ VCONST_2        =  0.000000000000000E+000,
+ VCONST_3        =  0.160000000000000     ,
+ VCONST_4        =  2.000000000000000E-008,
+ VCONST_5        =           3,
+ VCONST_6        =   10000000.0000000     ,
+ VCONST_7        =   100.000000000000     ,
+ VCONST_8        =   45.0000000000000     ,
+ DEBUG_NCAR_A    = F,
+ DEBUG_NCAR_B    = F,
+ VISC_VEL_SCALE_LENGTH   =   150000.000000000     ,
+ NEPTUNE = F,
+ NEPTUNE_LENGTH_EQ       =   1200.00000000000     ,
+ NEPTUNE_LENGTH_POLE     =   3000.00000000000     ,
+ NEPTUNE_DEPTH_MIN       =   100.000000000000     ,
+ NEPTUNE_SMOOTH  = T,
+ NEPTUNE_SMOOTH_NUM      =           1,
+ RESTRICT_POLAR_VISC     = T,
+ RESTRICT_POLAR_VISC_LAT =   60.0000000000000     ,
+ RESTRICT_POLAR_VISC_RATIO       =  0.350000000000000     ,
+ NCAR_ISOTROPIC_AT_DEPTH = F,
+ NCAR_ISOTROPIC_DEPTH    =   4000.00000000000     ,
+ NCAR_ISOTROPIC_AT_DEPTH_VISC    =   10000.0000000000     ,
+ DIVERGENCE_DAMP = F,
+ DIVERGENCE_DAMP_VEL_MICOM       =  0.000000000000000E+000,
+ VISCOSITY_SCALE_BY_ROSSBY       = T,
+ VISCOSITY_SCALE_BY_ROSSBY_POWER =   4.00000000000000     ,
+ ASYNC_DOMAIN_UPDATE     = F,
+ BLOCKSIZE       =          10,
+ USE_SIDE_DRAG_FRICTION  = F,
+ SIDE_DRAG_FRICTION_SCALING      =   1.00000000000000     ,
+ SIDE_DRAG_FRICTION_UVMAG_MAX    =   10.0000000000000     ,
+ SIDE_DRAG_FRICTION_MAX  =   1.00000000000000     
+ /
+
+================================================================================
+=>Using: ocean_bih_friction.f90 ($Id: ocean_bih_friction.F90,v 20.0 2013/12/14 00:14:08 fms Exp $)
+$Name: tikal $
+ &OCEAN_BIH_FRICTION_NML
+ BIH_FRICTION_SCHEME     = general   ,
+ DEBUG_THIS_MODULE       = F,
+ WRITE_A_RESTART = T
+ /
+
+================================================================================
+=>Using: ocean_bihgen_friction.F90 ($Id: ocean_bihgen_friction.F90,v 20.0 2013/12/14 00:14:16 fms Exp $)
+$Name: tikal $
+ &OCEAN_BIHGEN_FRICTION_NML
+ USE_THIS_MODULE = T,
+ DEBUG_THIS_MODULE       = F,
+ K_SMAG_ISO      =   2.00000000000000     ,
+ K_SMAG_ANISO    =  0.000000000000000E+000,
+ VEL_MICOM_ISO   =  4.000000000000000E-002,
+ VEL_MICOM_ANISO =  0.000000000000000E+000,
+ EQ_VEL_MICOM_ISO        =  0.000000000000000E+000,
+ EQ_VEL_MICOM_ANISO      =  0.000000000000000E+000,
+ EQ_LAT_MICOM    =  0.000000000000000E+000,
+ VEL_MICOM_BOTTOM        =  1.000000000000000E-002,
+ BOTTOM_5POINT   = T,
+ EQUATORIAL_ZONAL        = F,
+ EQUATORIAL_ZONAL_LAT    =  0.000000000000000E+000,
+ VISC_CRIT_SCALE =  0.250000000000000     ,
+ READ_AISO_BIH_BACK      = F,
+ NCAR_BOUNDARY_SCALING   = T,
+ NCAR_RESCALE_POWER      =           2,
+ NCAR_VCONST_4   =  2.000000000000000E-008,
+ NCAR_VCONST_5   =           5,
+ NCAR_BOUNDARY_SCALING_READ      = F,
+ NEPTUNE = F,
+ NEPTUNE_LENGTH_EQ       =   4200.00000000000     ,
+ NEPTUNE_LENGTH_POLE     =   17000.0000000000     ,
+ NEPTUNE_DEPTH_MIN       =   100.000000000000     ,
+ NEPTUNE_SCALING =   1.00000000000000     ,
+ NEPTUNE_SMOOTH  = T,
+ NEPTUNE_SMOOTH_NUM      =           1,
+ VISC_DIVERGE_SCALING    =  0.000000000000000E+000,
+ USE_SIDE_DRAG_FRICTION  = F,
+ SIDE_DRAG_FRICTION_SCALING      =   1.00000000000000     ,
+ SIDE_DRAG_FRICTION_UVMAG_MAX    =   10.0000000000000     ,
+ SIDE_DRAG_FRICTION_MAX  =   1.00000000000000     
+ /
+
+================================================================================
+$Id: ocean_momentum_source.F90,v 20.0 2013/12/14 00:16:02 fms Exp $
+$Name: tikal $
+ &OCEAN_MOMENTUM_SOURCE_NML
+ VERBOSE_INIT    = T,
+ USE_THIS_MODULE = F,
+ DEBUG_THIS_MODULE       = F,
+ USE_RAYLEIGH_DAMP_TABLE = F,
+ RAYLEIGH_DAMP_EXP_FROM_BOTTOM   = F,
+ RAYLEIGH_DAMP_EXP_SCALE =   100.000000000000     ,
+ RAYLEIGH_DAMP_EXP_TIME  =   864000.000000000     
+ /
+
+================================================================================
+$Id: ocean_form_drag.F90,v 20.0 2013/12/14 00:16:34 fms Exp $
+$Name: tikal $
+ &OCEAN_FORM_DRAG_NML
+ VERBOSE_INIT    = T,
+ USE_THIS_MODULE = F,
+ DEBUG_THIS_MODULE       = F,
+ USE_FORM_DRAG_AIKI      = F,
+ CPRIME_AIKI     =  0.300000000000000     ,
+ FORM_DRAG_AIKI_BOTTOM_LAYER     = F,
+ FORM_DRAG_AIKI_BOTTOM_KLEVELS   =           3,
+ FORM_DRAG_AIKI_SCALE_BY_GRADH   = F,
+ FORM_DRAG_AIKI_GRADH_MAX        =  5.000000000000000E-002,
+ FORM_DRAG_AIKI_GRADH_POWER      =   1.00000000000000     ,
+ FORM_DRAG_AIKI_SCALE_BY_GM      = F,
+ USE_FORM_DRAG_GBATCH    = F,
+ VISC_CBU_FORM_DRAG_MAX  =   1.00000000000000     ,
+ VEL_FORM_DRAG_MAX       =   1.00000000000000     ,
+ N_SQUARED_MIN   =  1.000000000000000E-010,
+ AGM_FORM_DRAG   =   600.000000000000     ,
+ FORM_DRAG_GBATCH_SURF_LAYER     = F,
+ KSURF_BLAYER_MIN        =           3,
+ FORM_DRAG_GBATCH_ALPHA_F2       = F,
+ FORM_DRAG_GBATCH_ALPHA  =   300000000.000000     ,
+ FORM_DRAG_GBATCH_F2OVERN2       = F,
+ FORM_DRAG_GBATCH_F2OVERNB2      = F,
+ FORM_DRAG_GBATCH_SMOOTH_N2      = F,
+ NUM_121_PASSES  =           1,
+ FORM_DRAG_GBATCH_F2OVERNO2      = F,
+ FORM_DRAG_GBATCH_NO     =  5.000000000000000E-003
+ /
+
+CVS $Id: ocean_tracer_advect.F90,v 20.0 2013/12/14 00:17:22 fms Exp $
+
+
+================================================================================
+CVS $Id: ocean_tracer_advect.F90,v 20.0 2013/12/14 00:17:22 fms Exp $
+Tag $Name: tikal $
+ &OCEAN_TRACER_ADVECT_NML
+ DEBUG_THIS_MODULE       = F,
+ LIMIT_WITH_UPWIND       = F,
+ ADVECT_SWEBY_ALL        = F,
+ ZERO_TRACER_ADVECT_HORZ = F,
+ ZERO_TRACER_ADVECT_VERT = F,
+ WRITE_A_RESTART = T,
+ PSOM_LIMIT_PRATHER      = F,
+ READ_BASIN_MASK = F,
+ ASYNC_DOMAIN_UPDATE     = F
+ /
+
+flux domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+fourth domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+sixth domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+quicker domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+mdfl domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+mdppm domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+mdmdt domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+================================================================================
+$Id: ocean_velocity_advect.F90,v 20.0 2013/12/14 00:12:43 fms Exp $
+$Name: tikal $
+ &OCEAN_VELOCITY_ADVECT_NML
+ DEBUG_THIS_MODULE       = F,
+ ZERO_VELOCITY_ADVECT_HORZ       = F,
+ ZERO_VELOCITY_ADVECT_VERT       = F,
+ VELOCITY_ADVECT_CENTERED        = T,
+ VELOCITY_ADVECT_UPWIND  = F
+ /
+
+================================================================================
+$Id: ocean_convect.F90,v 20.0 2013/12/14 00:16:32 fms Exp $
+$Name: tikal $
+ &OCEAN_CONVECT_NML
+ USE_THIS_MODULE = F,
+ CONVECT_NCON    = F,
+ NCON    =           7,
+ CONVECT_FULL_SCALAR     = F,
+ CONVECT_FULL_VECTOR     = F
+ /
+
+================================================================================
+$Id: ocean_sbc.F90,v 20.0 2013/12/14 00:10:59 fms Exp $
+$Name: tikal $
+ &OCEAN_SBC_NML
+ TEMP_RESTORE_TSCALE     =  -10.0000000000000     ,
+ SALT_RESTORE_TSCALE     =  -10.0000000000000     ,
+ SALT_RESTORE_UNDER_ICE  = T,
+ SALT_RESTORE_AS_SALT_FLUX       = T,
+ ETA_RESTORE_TSCALE      =  -30.0000000000000     ,
+ ZERO_NET_PME_ETA_RESTORE        = F,
+ ROTATE_WINDS    = F,
+ TAUX_SINX       = F,
+ TAUY_SINY       = F,
+ USE_WATERFLUX   = T,
+ WATERFLUX_TAVG  = F,
+ MAX_ICE_THICKNESS       =   8.00000000000000     ,
+ RUNOFFSPREAD    = F,
+ CALVINGSPREAD   = F,
+ USE_WATERFLUX_OVERRIDE_CALVING  = F,
+ USE_WATERFLUX_OVERRIDE_EVAP     = F,
+ USE_WATERFLUX_OVERRIDE_FPREC    = F,
+ SALINITY_REF    =   35.0000000000000     ,
+ ZERO_NET_SALT_RESTORE   = F,
+ ZERO_NET_WATER_RESTORE  = F,
+ ZERO_NET_WATER_COUPLER  = F,
+ ZERO_NET_WATER_COUPLE_RESTORE   = F,
+ ZERO_NET_SALT_CORRECTION        = F,
+ ZERO_NET_WATER_CORRECTION       = F,
+ DEBUG_WATER_FLUXES      = F,
+ ZERO_WATER_FLUXES       = F,
+ ZERO_CALVING_FLUXES     = F,
+ ZERO_PME_FLUXES = F,
+ ZERO_RUNOFF_FLUXES      = F,
+ ZERO_RIVER_FLUXES       = F,
+ CONVERT_RIVER_TO_PME    = F,
+ ZERO_HEAT_FLUXES        = F,
+ ZERO_SURFACE_STRESS     = F,
+ AVG_SFC_VELOCITY        = T,
+ AVG_SFC_TEMP_SALT_ETA   = T,
+ ICE_SALT_CONCENTRATION  =  5.000000000000000E-003,
+ RUNOFF_SALINITY =  0.000000000000000E+000,
+ RUNOFF_TEMP_MIN =  0.000000000000000E+000,
+ READ_RESTORE_MASK       = F,
+ RESTORE_MASK_GFDL       = F,
+ LAND_MODEL_HEAT_FLUXES  = F,
+ USE_FULL_PATM_FOR_SEA_LEVEL     = T,
+ MAX_DELTA_SALINITY_RESTORE      = -0.500000000000000     ,
+ DO_FLUX_CORRECTION      = F,
+ TEMP_CORRECTION_SCALE   =  0.000000000000000E+000,
+ SALT_CORRECTION_SCALE   =  0.000000000000000E+000,
+ TAU_X_CORRECTION_SCALE  =  0.000000000000000E+000,
+ TAU_Y_CORRECTION_SCALE  =  0.000000000000000E+000,
+ DO_BITWISE_EXACT_SUM    = T,
+ SBC_HEAT_FLUXES_CONST   = F,
+ SBC_HEAT_FLUXES_CONST_VALUE     =  0.000000000000000E+000,
+ SBC_HEAT_FLUXES_CONST_SEASONAL  = F,
+ USE_CONSTANT_SSS_FOR_RESTORE    = F,
+ CONSTANT_SSS_FOR_RESTORE        =   35.0000000000000     ,
+ USE_CONSTANT_SST_FOR_RESTORE    = F,
+ CONSTANT_SST_FOR_RESTORE        =   12.0000000000000     ,
+ USE_IDEAL_CALVING       = F,
+ USE_IDEAL_RUNOFF        = F,
+ CONSTANT_HLF    = T,
+ CONSTANT_HLV    = T,
+ READ_STOKES_DRIFT       = F,
+ DO_LANGMUIR     = F
+ /
+ &OCEAN_SBC_OFAM_NML
+ RESTORE_MASK_OFAM       = F,
+ RIVER_TEMP_OFAM = F
+ /
+
+sbc domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+================================================================================
+$Id$
+$Name$
+ &GET_CAL_TIME_NML
+ ALLOW_CALENDAR_CONVERSION       = T
+ /
+
+================================================================================
+$Id: ocean_bbc.F90,v 20.0 2013/12/14 00:10:36 fms Exp $
+$Name: tikal $
+ &OCEAN_BBC_NML
+ BMF_IMPLICIT    = F,
+ CDBOT   =  2.000000000000000E-003,
+ URESIDUAL       =  5.000000000000000E-002,
+ CDBOT_LAW_OF_WALL       = F,
+ LAW_OF_WALL_ROUGH_LENGTH        =  1.000000000000000E-002,
+ CDBOT_ROUGHNESS_LENGTH  = F,
+ USE_GEOTHERMAL_HEATING  = T,
+ CONVERT_GEOTHERMAL      =  1.000000000000000E-003,
+ CDBOT_HI        =  3.000000000000000E-003,
+ CDBOT_LO        =  1.000000000000000E-003,
+ CDBOT_GAMMA     =   40.0000000000000     ,
+ UVMAG_MAX       =   10.0000000000000     ,
+ BMF_MAX =   1.00000000000000     ,
+ DEBUG_THIS_MODULE       = F,
+ CDBOT_ROUGHNESS_UAMP    = F,
+ CDBOT_HH        =   1100.00000000000     ,
+ CDBOT_UU        =   1.00000000000000     ,
+ CDBOT_WAVE      = F
+ /
+ &OCEAN_BBC_OFAM_NML
+ READ_TIDE_SPEED = F,
+ URESIDUAL2_MAX  =  5.000000000000000E-002
+ /
+
+================================================================================
+$Id: ocean_shortwave.F90,v 20.0 2013/12/14 00:16:14 fms Exp $
+$Name: tikal $
+ &OCEAN_SHORTWAVE_NML
+ USE_THIS_MODULE = T,
+ USE_SHORTWAVE_GFDL      = T,
+ USE_SHORTWAVE_CSIRO     = F,
+ USE_SHORTWAVE_JERLOV    = F,
+ USE_SHORTWAVE_EXT       = F
+ /
+
+================================================================================
+$Id: ocean_shortwave_gfdl.F90,v 20.0 2013/12/14 00:16:18 fms Exp $
+$Name: tikal $
+ &OCEAN_SHORTWAVE_GFDL_NML
+ USE_THIS_MODULE = T,
+ READ_CHL        = T,
+ CHL_DEFAULT     =  8.000000000000000E-002,
+ ZMAX_PEN        =   200.000000000000     ,
+ SW_FRAC_TOP     =  0.000000000000000E+000,
+ DEBUG_THIS_MODULE       = F,
+ ENFORCE_SW_FRAC = T,
+ OVERRIDE_F_VIS  = F,
+ SW_MOREL_FIXED_DEPTHS   = F,
+ OPTICS_FOR_UNIFORM_CHL  = F,
+ OPTICS_MOREL_ANTOINE    = F,
+ OPTICS_MANIZZA  = T
+ /
+
+================================================================================
+$Id: ocean_sponges_tracer.F90,v 20.0 2013/12/14 00:16:24 fms Exp $
+$Name: tikal $
+ &OCEAN_SPONGES_TRACER_NML
+ USE_THIS_MODULE = F,
+ DAMP_COEFF_3D   = F
+ /
+ &OCEAN_SPONGES_TRACER_OFAM_NML
+ USE_ADAPTIVE_RESTORE    = F,
+ USE_SPONGE_AFTER_INIT   = F,
+ USE_NORMALISING = F,
+ USE_HARD_THUMP  = F,
+ ATHRESH =  0.500000000000000     ,
+ TAUMIN  =   720.000000000000     ,
+ LAMBDA  =  8.300000000000000E-003,
+ NPOWER  =   1.00000000000000     ,
+ DAYS_TO_RESTORE =           1,
+ SECS_TO_RESTORE =           0,
+ DEFLATE = F,
+ DEFLATE_FRACTION        =  0.600000000000000     ,
+ LIMIT_TEMP      = F,
+ LIMIT_TEMP_MIN  =  -1.80000000000000     ,
+ LIMIT_TEMP_RESTORE      =   10800.0000000000     ,
+ LIMIT_SALT      = F,
+ LIMIT_SALT_MIN  =  1.000000000000000E-002,
+ LIMIT_SALT_RESTORE      =   3600.00000000000     
+ /
+
+================================================================================
+$Id: ocean_sponges_velocity.F90,v 20.0 2013/12/14 00:16:26 fms Exp $
+$Name: tikal $
+ &OCEAN_SPONGES_VELOCITY_NML
+ USE_THIS_MODULE = F,
+ DAMP_COEFF_3D   = F
+ /
+ &OCEAN_SPONGES_VELOCITY_OFAM_NML
+ USE_ADAPTIVE_RESTORE    = F,
+ USE_SPONGE_AFTER_INIT   = F,
+ USE_NORMALISING = F,
+ USE_HARD_THUMP  = F,
+ ATHRESH =  0.500000000000000     ,
+ TAUMIN  =   720.000000000000     ,
+ LAMBDA  =  8.300000000000000E-003,
+ NPOWER  =   1.00000000000000     ,
+ DAYS_TO_RESTORE =           1,
+ SECS_TO_RESTORE =           0
+ /
+
+================================================================================
+$Id: ocean_sponges_eta.F90,v 20.0 2013/12/14 00:16:22 fms Exp $
+$Name: tikal $
+ &OCEAN_SPONGES_ETA_NML
+ USE_THIS_MODULE = F
+ /
+ &OCEAN_SPONGES_ETA_OFAM_NML
+ USE_ADAPTIVE_RESTORE    = F,
+ USE_SPONGE_AFTER_INIT   = F,
+ USE_NORMALISING = F,
+ USE_HARD_THUMP  = F,
+ ATHRESH =  0.500000000000000     ,
+ TAUMIN  =   720.000000000000     ,
+ LAMBDA  =  8.300000000000000E-003,
+ NPOWER  =   1.00000000000000     ,
+ DAYS_TO_RESTORE =           1,
+ SECS_TO_RESTORE =           0
+ /
+
+================================================================================
+$Id: ocean_xlandmix.F90,v 20.0 2013/12/14 00:16:30 fms Exp $
+$Name: tikal $
+ &OCEAN_XLANDMIX_NML
+ VERBOSE_INIT    = T,
+ USE_THIS_MODULE = T,
+ XLANDMIX_KMT    = T
+ /
+
+xlandmix domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+================================================================================
+$Id: ocean_xlandinsert.F90,v 20.0 2013/12/14 00:16:28 fms Exp $
+$Name: tikal $
+ &OCEAN_XLANDINSERT_NML
+ VERBOSE_INIT    = T,
+ USE_THIS_MODULE = T,
+ DEBUG_THIS_MODULE       = F
+ /
+
+xlandinsert domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+================================================================================
+$Id: ocean_riverspread.F90,v 20.0 2013/12/14 00:16:12 fms Exp $)
+$Name: tikal $
+ &OCEAN_RIVERSPREAD_NML
+ USE_THIS_MODULE = F,
+ DEBUG_THIS_MODULE       = F,
+ RIVERSPREAD_DIFFUSION   = F,
+ RIVERSPREAD_DIFFUSION_PASSES    =           0,
+ VEL_MICOM_SMOOTH        =  0.200000000000000     
+ /
+
+================================================================================
+$Id: ocean_rivermix.F90,v 20.0 2013/12/14 00:16:10 fms Exp $
+$Name: tikal $
+ &OCEAN_RIVERMIX_NML
+ USE_THIS_MODULE = T,
+ DEBUG_THIS_MODULE       = F,
+ DEBUG_ALL_IN_TOP_CELL   = F,
+ DEBUG_THIS_MODULE_HEAT  = F,
+ RIVER_DIFFUSE_TEMP      = F,
+ RIVER_DIFFUSE_SALT      = F,
+ RIVER_DIFFUSION_THICKNESS       =  0.000000000000000E+000,
+ RIVER_DIFFUSIVITY       =  0.000000000000000E+000,
+ DISCHARGE_COMBINE_RUNOFF_CALVE  = T,
+ RIVER_INSERTION_THICKNESS       =   40.0000000000000     ,
+ RUNOFF_INSERTION_THICKNESS      =   40.0000000000000     ,
+ CALVING_INSERTION_THICKNESS     =   40.0000000000000     ,
+ DO_BITWISE_EXACT_SUM    = F
+ /
+
+================================================================================
+=>Using: ocean_overexchange.f90 ($Id: ocean_overexchange.F90,v 20.0 2013/12/14 00:16:04 fms Exp $)
+$Name: tikal $
+ &OCEAN_OVEREXCHANGE_NML
+ USE_THIS_MODULE = F,
+ DEBUG_THIS_MODULE       = F,
+ OVEREXCH_NPTS   =           4,
+ OVEREXCH_WIDTH  =           1,
+ OVEREXCH_WEIGHT_FAR     = F,
+ OVERFLOW_MU     =  1.000000000000000E-004,
+ OVERFLOW_DELTA  =  0.333300000000000     ,
+ OVERFLOW_UMAX   =   5.00000000000000     ,
+ DO_BITWISE_EXACT_SUM    = F,
+ OVEREXCH_STABILITY      =  0.250000000000000     ,
+ OVEREXCH_MIN_THICKNESS  =   4.00000000000000     ,
+ OVEREXCH_CHECK_EXTREMA  = F
+ /
+
+================================================================================
+=>Using: ocean_mixdownslope.f90 ($Id: ocean_mixdownslope.F90,v 20.0 2013/12/14 00:14:28 fms Exp $)
+$Name: tikal $
+ &OCEAN_MIXDOWNSLOPE_NML
+ USE_THIS_MODULE = T,
+ DEBUG_THIS_MODULE       = F,
+ MIXDOWNSLOPE_NPTS       =           4,
+ MIXDOWNSLOPE_WIDTH      =           1,
+ MIXDOWNSLOPE_WEIGHT_FAR = F,
+ MIXDOWNSLOPE_FRAC_CENTRAL       =  0.250000000000000     ,
+ DO_BITWISE_EXACT_SUM    = F,
+ READ_MIXDOWNSLOPE_MASK  = T,
+ MIXDOWNSLOPE_MASK_GFDL  = T
+ /
+
+mixdownslope domain decomposition:     6 X    4
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+================================================================================
+=>Using: ocean_overflow.f90 ($Id: ocean_overflow.F90,v 20.0 2013/12/14 00:16:06 fms Exp $)
+$Name: tikal $
+ &OCEAN_OVERFLOW_NML
+ USE_THIS_MODULE = F,
+ DEBUG_THIS_MODULE       = F,
+ OVERFLOW_MU     =  1.000000000000000E-004,
+ OVERFLOW_DELTA  =  0.333300000000000     ,
+ OVERFLOW_UMAX   =  1.000000000000000E-002,
+ DO_BITWISE_EXACT_SUM    = F,
+ NO_RETURN_FLOW  = F,
+ TRANSPORT_UNITS = Sv                              
+ /
+
+================================================================================
+=>Using: ocean_overflow_OFP.f90 ($Id: ocean_overflow_OFP.F90,v 20.0 2013/12/14 00:16:08 fms Exp $)
+$Name: tikal $
+
+================================================================================
+$Id: ocean_diagnostics.F90,v 20.0 2013/12/14 00:12:51 fms Exp $
+$Name: tikal $
+
+================================================================================
+$Id: ocean_adv_vel_diag.F90,v 20.0 2013/12/14 00:12:49 fms Exp $
+$Name: tikal $
+ &OCEAN_ADV_VEL_DIAG_NML
+ MAX_CFL_VALUE   =   100.000000000000     ,
+ LARGE_CFL_VALUE =   10.0000000000000     ,
+ VERBOSE_CFL     = F,
+ DIAG_STEP       =        2400
+ /
+
+================================================================================
+$Id: ocean_tracer_diag.F90,v 20.0 2013/12/14 00:12:55 fms Exp $
+$Name: tikal $
+ &OCEAN_TRACER_DIAG_NML
+ TRACER_CONSERVE_DAYS    =   100.000000000000     ,
+ DIAG_STEP       =        2400,
+ PSU2PPT =   1.00486700000000     ,
+ DEBUG_DIAGNOSE_MIXINGA  = F,
+ DEBUG_DIAGNOSE_MIXINGB  = F,
+ DEBUG_DIAGNOSE_MIXINGC  = F,
+ DEBUG_DIAGNOSE_MIXINGD  = F,
+ SMOOTH_KAPPA_SORT       =           0,
+ RHO_GRAD_MIN    =  1.000000000000000E-005,
+ RHO_GRAD_MAX    =  1.000000000000000E+028,
+ BUOYANCY_CRIT   =  3.000000000000000E-004,
+ DO_BITWISE_EXACT_SUM    = F,
+ FRAZIL_FACTOR   =   1.00000000000000     ,
+ SMOOTH_MLD      = T,
+ SMOOTH_MLD_FOR_SUBDUCTION       = T,
+ DTHETA_CRIT     =   2.00000000000000     
+ /
+
+================================================================================
+$Id: ocean_velocity_diag.F90,v 20.0 2013/12/14 00:12:59 fms Exp $
+$Name: tikal $
+ &OCEAN_VELOCITY_DIAG_NML
+ DIAG_STEP       =           1,
+ ENERGY_DIAG_STEP        =        2400,
+ DO_BITWISE_EXACT_SUM    = F,
+ DEBUG_THIS_MODULE       = F,
+ MAX_CFL_VALUE   =   100.000000000000     ,
+ LARGE_CFL_VALUE =   10.0000000000000     ,
+ VERBOSE_CFL     = F,
+ LAND_CELL_NUM_MAX       =         100
+ /
+
+================================================================================
+$Id: ocean_increment_eta.F90,v 20.0 2013/12/14 00:15:56 fms Exp $
+$Name: tikal $
+ &OCEAN_INCREMENT_ETA_NML
+ USE_THIS_MODULE = F,
+ FRACTION_INCREMENT      =   1.00000000000000     ,
+ DAYS_TO_INCREMENT       =           1,
+ SECS_TO_INCREMENT       =           0
+ /
+
+================================================================================
+$Id: ocean_increment_tracer.F90,v 20.0 2013/12/14 00:15:58 fms Exp $
+$Name: tikal $
+ &OCEAN_INCREMENT_TRACER_NML
+ USE_THIS_MODULE = F,
+ FRACTION_INCREMENT      =   1.00000000000000     ,
+ DAYS_TO_INCREMENT       =           1,
+ SECS_TO_INCREMENT       =           0
+ /
+
+================================================================================
+$Id: ocean_increment_velocity.F90,v 20.0 2013/12/14 00:16:00 fms Exp $
+$Name: tikal $
+ &OCEAN_INCREMENT_VELOCITY_NML
+ USE_THIS_MODULE = F,
+ FRACTION_INCREMENT      =   1.00000000000000     ,
+ DAYS_TO_INCREMENT       =           1,
+ SECS_TO_INCREMENT       =           0
+ /
+
+================================================================================
+$Id: ocean_wave.F90,v 20.0 2013/12/14 00:17:26 fms Exp $
+$Name: tikal $
+ &OCEAN_WAVE_NML
+ WAVEDAMP        =  -10.0000000000000     ,
+ DAMP_WHERE_ICE  = T,
+ WRITE_A_RESTART = T,
+ DEBUG_THIS_MODULE       = F,
+ USE_TMA = T,
+ FILTER_WAVE_MOM = T,
+ USE_THIS_MODULE = F
+ /
+ &OCEAN_DRIFTERS_NML
+ USE_THIS_MODULE = F,
+ OUTPUT_INTERVAL =           1
+ /
+ &DATA_OVERRIDE_NML
+ DEBUG_DATA_OVERRIDE     = T,
+ GRID_CENTER_BUG = F
+ /
+
+================================================================================
+$Id: flux_exchange.F90,v 20.0 2013/12/13 23:27:41 fms Exp $
+$Name: tikal $
+ &FLUX_EXCHANGE_NML
+ Z_REF_HEAT      =   2.00000000000000     ,
+ Z_REF_MOM       =   10.0000000000000     ,
+ EX_U_STAR_SMOOTH_BUG    = F,
+ SW1WAY_BUG      = F,
+ DO_AREA_WEIGHTED_FLUX   = F,
+ DEBUG_STOCKS    = F,
+ DIVERT_STOCKS_REPORT    = T,
+ DO_RUNOFF       = T,
+ DO_FORECAST     = F
+ /
+ ==>Note from flux_exchange_mod(flux_exchange_init):
+  Number of exchanged tracers =            1
+ Tracer field name :sphum
+
+================================================================================
+$Id$
+$Name$
+ &XGRID_NML
+ MAKE_EXCHANGE_REPRODUCE = T,
+ INTERP_METHOD   = second_order                                                    ,
+ DEBUG_STOCKS    = F,
+ XGRID_LOG       = F,
+ XGRID_CLOCKS_ON = F,
+ MONOTONIC_EXCHANGE      = F,
+ NSUBSET =           0,
+ DO_ALLTOALL     = T,
+ DO_ALLTOALLV    = F
+ /
+ &ICE_SPEC_NML
+ MCM_ICE = F,
+ DO_LEADS        = T,
+ MINIMUM_ICE_CONCENTRATION       =  0.200000000000000     ,
+ MINIMUM_ICE_THICKNESS   =   1.00000000000000     ,
+ SST_DEGK        = F,
+ SST_PERT        =  0.000000000000000E+000,
+ REPEAT_DATE     = 3*-1
+ /
+
+================================================================================
+$Id: ice_spec.F90,v 20.0 2013/12/13 23:28:29 fms Exp $
+$Name: tikal $
+
+================================================================================
+$Id: surface_flux.F90,v 20.0 2013/12/13 23:27:45 fms Exp $
+$Name: tikal $
+ &SURFACE_FLUX_NML
+ NO_NEG_Q        = F,
+ USE_VIRTUAL_TEMP        = T,
+ ALT_GUSTINESS   = F,
+ GUST_CONST      =   1.00000000000000     ,
+ GUST_MIN        =  0.000000000000000E+000,
+ OLD_DTAUDV      = F,
+ USE_MIXING_RATIO        = F,
+ NCAR_OCEAN_FLUX = F,
+ NCAR_OCEAN_FLUX_ORIG    = F,
+ RAOULT_SAT_VAP  = F,
+ DO_SIMPLE       = F
+ /
+
+================================================================================
+$Id$
+$Name$
+ &SAT_VAPOR_PRES_NML
+ SHOW_BAD_VALUE_COUNT_BY_SLICE   = T,
+ SHOW_ALL_BAD_VALUES     = F,
+ USE_EXACT_QS    = F,
+ DO_SIMPLE       = F,
+ CONSTRUCT_TABLE_WRT_LIQ = T,
+ CONSTRUCT_TABLE_WRT_LIQ_AND_ICE = T
+ /
+
+================================================================================
+$Id: monin_obukhov.F90,v 19.0 2012/01/06 20:10:48 fms Exp $
+$Name: tikal $
+ &MONIN_OBUKHOV_NML
+ RICH_CRIT       =   2.00000000000000     ,
+ NEUTRAL = T,
+ DRAG_MIN        =  1.000000000000000E-005,
+ STABLE_OPTION   =           1,
+ ZETA_TRANS      =  0.500000000000000     
+ /
+
+================================================================================
+$Id: ocean_rough.F90,v 19.0 2012/01/06 20:37:13 fms Exp $
+$Name: tikal $
+ &OCEAN_ROUGH_NML
+ ROUGHNESS_INIT  =  4.400000000000000E-004,
+ ROUGHNESS_HEAT  =  5.800000000000000E-005,
+ ROUGHNESS_MOM   =  5.800000000000000E-005,
+ ROUGHNESS_MOIST =  5.800000000000000E-005,
+ ROUGHNESS_MIN   =  1.000000000000000E-006,
+ CHARNOCK        =  3.200000000000000E-002,
+ ROUGH_SCHEME    = beljaars                        ,
+ DO_HIGHWIND     = F,
+ DO_CAP40        = F,
+ ZCOH1   =  0.000000000000000E+000,
+ ZCOQ1   =  0.000000000000000E+000
+ /
+
+namelist option USE_FIXED_ROUGH is no longer supported
+use variable ROUGH_SCHEME instead
+
+================================================================================
+$Id: ocean_albedo.F90,v 19.0 2012/01/06 20:37:11 fms Exp $
+$Name: tikal $
+ &OCEAN_ALBEDO_NML
+ OCEAN_ALBEDO_OPTION     =           2,
+ CONST_ALB       =  0.100000000000000     
+ /
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+$Id$
+$Name$
+
+                                     time
+Total runtime                       537.209878
+Initialization                        3.932062
+  Init: atmos_model_init              0.073903
+  Init: land_model_init               0.088178
+  Init: ice_model_init                0.212489
+  Init: ocean_model_init              2.811357
+  Init: flux_exchange_init            0.211691
+Main loop                           530.477827
+Termination                           2.789345
+Ice                                  12.360450
+Ice: bot to top                       0.323302
+Ice: update slow (dn)                10.623385
+  Ice: slow: conservation check       0.094216
+  Ice: slow: dynamics                 9.026034
+       slow: ice_dynamics             8.933536
+       slow: comm/cut check           0.038911
+       slow: diags                    0.030760
+  Ice: slow: thermodynamics           0.081865
+  Ice: slow: restore/limit            0.000046
+  Ice: slow: salt to ocean            0.860329
+  Ice: slow: thermodyn diags          0.277567
+Ice: update fast                      1.413426
+Ocean                               492.704067
+(Ocean initialization)                2.807157
+(Ocean ODA)                           0.000000
+(Ocean advection velocity)            4.865248
+(Ocean density diag)                  4.066742
+(Ocean update density)               14.434644
+(Ocean vertical mixing coeff)        54.584985
+(Ocean neutral physics)             140.744224
+(Ocean submesoscale restrat)         38.230111
+(Ocean shortwave)                     7.793741
+(Ocean sponges_eta)                   0.000214
+(Ocean sponges_tracer)                0.000441
+(Ocean sponges_velocity)              0.000145
+(Ocean xlandinsert)                   3.600101
+(Ocean xlandmix)                      7.220528
+(Ocean rivermix)                      1.740834
+(Ocean overexchange)                  0.000367
+(Ocean mixdownslope)                 11.846733
+(Ocean blob update)                   0.000903
+(Ocean blob cell update)              0.000000
+(Ocean blob diagnose depth)           0.000174
+(Ocean overflow)                      0.040329
+(Ocean overflow_OFP)                  0.000410
+(Ocean sigma transport)               7.805735
+(Ocean tracer update)                61.453370
+(Ocean surface flux)                  1.684564
+(Ocean bottom flux)                   0.074362
+(Ocean restoring flux)                0.025602
+(Ocean TPM source)                    0.366405
+(Ocean TPM bbc)                       0.000240
+(Ocean TPM tracer)                    0.007119
+(Ocean explicit accel_a)             62.970144
+(Ocean explicit accel_b)              4.547099
+(Ocean implicit accel)               12.209481
+(Ocean eta and pbot tendency)         0.020762
+(Ocean eta and pbot update)           0.069953
+(Ocean eta and pbot diagnose)         0.930116
+(Ocean rho_dzt tendency)              0.678216
+(Ocean dzt_dst update)                0.000000
+(Ocean surface height smooth)         0.881956
+(Ocean bottom pressure smooth)        0.000000
+(Ocean mass forcing)                  0.288481
+(Ocean barotropic forcing)            0.802748
+(Ocean barotropic dynamics)          13.657272
+(Ocean velocity update)               3.547901
+(Ocean diagnostics)                  13.399804
+(Ocean update T-cell thickness)       3.996112
+(Ocean update Total thickness)        0.000000
+(Ocean update L sys. thickness)       0.000000
+(Ocean update E sys. thickness)       0.000000
+(Ocean update U-cell thickness)       6.206014
+(Ocean tracer halo updates)           0.328703
+(Ocean velocity halo update)          0.248505
+(Ocean sum ocean surface)             0.316247
+(Ocean average state)                 0.005831
+(Ocean tracer tmask limit)            3.185465
+(Ocean gotm: advection)               0.000000
+(Ocean increment eta)                 0.000191
+(Ocean increment tracer)              0.000389
+(Ocean increment velocity)            0.000132
+(Ocean update rho_salinity)           0.208372
+(Ocean idealized surface waves)       0.000295
+(Ocean open boundaries)               0.000000
+(Ocean tracer: bih tracer)            0.001074
+(Ocean tracer: lap tracer)            0.001717
+(Ocean tracer: vert diffuse)          1.708425
+(Ocean tracer: vert diffuse impl      8.004676
+(Ocean tracer: advection)            37.142198
+(Ocean tracer: frazil)                0.216314
+(Ocean tracer: convection)            0.000157
+(Ocean tracer: Lagrangian blobs)      0.000878
+(Ocean tracer: implicit blobs)        0.000300
+(Ocean tracer: adjust the L thic      0.000044
+(Ocean tracer: adjust the E thic      0.000158
+(Ocean CT2PT: 1)                      0.000000
+(Ocean CT2PT: 2)                      0.000000
+(Ocean CT2PT: 3)                      0.000000
+(Ocean vmix: constant)                0.000000
+(Ocean vmix: PPvmix)                  0.000000
+(Ocean vmix: KPP_test)                0.000000
+(Ocean vmix: KPP_mom4p0)              0.000000
+(Ocean vmix: KPP_mom4p1)             29.912209
+(Ocean vmix: chenvmix)                0.000000
+(Ocean vmix: gotmvmix)                0.000000
+(Ocean vmix: tidal)                  22.946047
+(Ocean vmix: watermass_diag)          0.000875
+(Ocean neutral: tracer derivs)        8.390175
+(Ocean neutral: slopes)               5.553039
+(Ocean neutral: eady rate)           11.919161
+(Ocean neutral: baroclinic)           0.021819
+(Ocean neutral: rossby radius)        0.824654
+(Ocean neutral: bc zone radius)       0.000000
+(Ocean neutral: diffusivity)          4.071713
+(Ocean neutral: cabbel/thermob)       0.000000
+(Ocean neutral: eta_tend_gm90)        0.000000
+(Ocean neutral: nrho-trans)           0.000000
+(Ocean neutral: rho-trans)            0.000000
+(Ocean neutral: theta-trans)          0.000000
+(Ocean neutral: neutral blayer)      66.625328
+(Ocean neutral: fz-terms)            12.505441
+(Ocean neutral: fx-flux)              8.980319
+(Ocean neutral: fy-flux)              8.892696
+(Ocean neutral: fz-flux)              3.808151
+(Ocean neutral: fx-flux-diag)         0.000000
+(Ocean neutral: fy-flux-diag)         0.000000
+(Ocean neutral: fz-flux-diag)         0.000000
+(Ocean neutral: fz-terms-diag)        0.000000
+(Ocean const   lap frict)             0.000000
+(Ocean general lap frict)            17.087451
+(Ocean C-grid lap frict)              0.000000
+(Ocean const   bih frict)             0.000000
+(Ocean general bih frict)            28.750730
+(Ocean c-grid  bih frict)             0.000000
+(Ocean advect: horz 4th)              0.000000
+(Ocean advect: vert 4th)              0.000000
+(Ocean advect: horz 6th)              0.000000
+(Ocean advect: vert 6th)              0.000000
+(Ocean advect: horz quk)              0.000000
+(Ocean advect: vert quk)              0.000000
+(Ocean advect: horz qukmom3)          0.000000
+(Ocean advect: vert qukmom3)          0.000000
+(Ocean advect: MDFL-sup-b)            0.000000
+(Ocean advect: MDFL-sweby)            0.000000
+(Ocean advect: MDFL-sweby-all)        0.000000
+(Ocean advect: MDFL-sweby-test)       0.000000
+(Ocean advect: DST-linear)            0.000000
+(Ocean advect: DST-linear-test)       0.000000
+(Ocean advect: MDFL-sweby-mpi)        0.000000
+(Ocean advect: MDFL-sweby-cuk)        0.000000
+(Ocean advect: MDFL-sweby-cui)        0.000000
+(Ocean advect: MDFL-sweby-cuj)        0.000000
+(Ocean advect: MDFL-sweby-diag)       0.000000
+(Ocean advect: MDPPM)                30.265832
+(Ocean advect: MDPPM-TEST)            0.000000
+(Ocean advect: psom total)            0.000000
+(Ocean psom advect: psom_x)           0.000000
+(Ocean psom advect: psom_y)           0.000000
+(Ocean psom advect: psom_z)           0.000000
+(Ocean advect: MDMDT-TEST)            0.000000
+(Ocean advect: horz up)               0.000000
+(Ocean advect: vert up)               0.000000
+(Ocean advect: horz 2nd)              0.000000
+(Ocean advect: vert 2nd)              0.000000
+(Ocean advect: gyre_overturn)         0.000000
+(Ocean advect: advect diss)           0.000000
+(Ocean shortwave morel pen)           0.000000
+(Ocean shortwave morel pen-mom4p      0.000000
+(Ocean_OFP_init)                      0.000000
+(Ocean_OFP_main)                      0.000000
+(ocean_OFP_update_1)                  0.000000
+(ocean_OFP_update_2)                  0.000000
+(ocean_OFP_update_3)                  0.000000
+(Ocean diagnostics: adv_vel)          0.262466
+(Ocean diagnostics: tracer)           3.966377
+(Ocean diagnostics: velocity)         9.169674
+(Ocean adv_vel_diag: numerics)        0.000229
+(Ocean adv_vel_diag: s-trans)         0.258526
+(Ocean adv_vel_diag: rho-trans)       0.001331
+(Ocean adv_vel_diag: nrho-trans)      0.000472
+(Ocean adv_vel_diag: theta-trans      0.000430
+(Ocean tracer_diag: compute_subd      0.000084
+(Ocean tracer_diag: compute_trac      0.000645
+(Ocean tracer_diag: mld_dtheta)       0.000166
+(Ocean tracer_diag: mld)              0.000269
+(Ocean tracer_diag: rho_mld)          0.008210
+(Ocean tracer_diag: potrho depth      0.000034
+(Ocean tracer_diag: theta depth)      0.000026
+(Ocean tracer_diag: tracer on rh      0.000677
+(Ocean tracer_diag: tracer_zrho       0.000501
+(Ocean tracer_diag: numerical)        0.000034
+(Ocean tracer_diag: diag mixing       0.000074
+(Ocean tracer_diag: conserve)         2.258793
+(Ocean tracer_diag: total water       0.265630
+(Ocean tracer_diag: total water       0.226869
+(Ocean tracer_diag: total tracer      1.199929
+(Ocean tracer_diag: integrals)        0.000000
+(Ocean tracer_diag: change)           0.000000
+(Ocean tracer_diag: land check)       0.000000
+(Velocity diag: energy analysis)      0.000000
+(Velocity diag: press convert)        0.000000
+(Velocity diag: press energy)         0.000000
+(Velocity diag: friction energy)      0.000000
+(Velocity diag: vert dissipation      0.000299
+(Wave model initialization)           0.000000
+(Wave diagnostics)                    0.000000
+Land-ice-atm coupler                 24.593677
+SFC boundary layer                   10.830542
+Flux DN from atm                     12.201789
+Flux land to ice                      0.447703
+XGrid generation                      0.122862
+Flux UP to atm                        0.990169
+Ice-ocean coupler                     0.490564
+Flux ice to ocean                     0.355427
+Flux ocean to ice                     0.135016
+generate_sfc_xgrid                    0.123071
+flux_ocean_to_ice                     0.135283
+flux_ice_to_ocean                     0.355563
+flux_check_stocks                     0.000000
+ATM                                  36.874211
+  ATM: update_ice_model_slow_up       0.323823
+  ATM: atmos loop                    25.440141
+     A-L: atmos_tracer_driver_ga      0.000000
+     A-L: sfc_boundary_layer         10.831713
+     A-L: update_atmos_model_dow      0.000000
+     A-L: flux_down_from_atmos       12.202171
+     A-L: update_land_model_fast      0.000037
+     A-L: update_ice_model_fast       1.413866
+     A-L: flux_up_to_atmos            0.990493
+     A-L: update_atmos_model_up       0.000020
+  ATM: update_land_model_slow         0.000023
+  ATM: flux_land_to_ice               0.448035
+  ATM: update_ice_model_slow_dn      10.647656
+  ATM: flux_ice_to_ocean_stocks       0.008961
+OCN                                 492.751971
+intermediate restart                  0.000000
+final flux_check_stocks               0.003985

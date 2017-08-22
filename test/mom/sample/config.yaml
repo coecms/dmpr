@@ -1,0 +1,43 @@
+# PBS flags
+queue: express
+project: v45
+walltime: 1:00:00
+ncpus: 24
+# npernode: 12
+mem: 60GB 
+jobname: mom_sis_topaz
+join: oe
+
+collate: true
+# collate: false
+
+collate_walltime: 4:00:00
+collate_mem: 30GB
+collate_flags: -v -n4 -z -m -r
+collate_ncpus: 1
+collate_queue: express
+
+# System environment
+stacksize: unlimited
+
+shortpath: /short/v45
+
+runlog: true
+
+debug: false
+
+# mpiP: true
+
+# Model config
+model: mom
+# exe: mom51_sis_ompi184_debug_5kmethods
+# exe: mom51_sis_xgrid
+# exe: fms_MOM_SIS_matt.x
+exe: MOM5_SIS
+
+input:
+    - MOM_SIS_TOPAZ/grids
+    - MOM_SIS_TOPAZ/initial
+    - MOM_SIS_TOPAZ/INPUT
+    - /g/data1/v45/aph502/jra55/RYF/
+

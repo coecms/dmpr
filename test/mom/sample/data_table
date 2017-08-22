@@ -1,0 +1,48 @@
+"ATM" , "p_surf"        , "psl"         , "./INPUT/RYF.slp.1984_1985.nc"                     , "bicubic" ,  1.0
+"ATM" , "p_bot"         , "psl"         , "./INPUT/RYF.slp.1984_1985.nc"                     , "bicubic" ,  1.0
+"ATM" , "t_bot"         , "tas_10m"    , "./INPUT/RYF.t_10.1984_1985.nc"	, "bicubic" ,  1.0
+"ATM" , "sphum_bot"     , "huss_10m"    , "./INPUT/RYF.q_10.1984_1985.nc"	, "bicubic" ,  1.0
+"ATM" , "u_bot"         , "uas_10m"    , "./INPUT/RYF.u_10.1984_1985.nc"	, "bicubic" ,  1.0
+"ATM" , "v_bot"         , "vas_10m"    , "./INPUT/RYF.v_10.1984_1985.nc"	, "bicubic" ,  1.0
+"ATM" , "z_bot"         , ""            , ""                             , "bicubic" , 10.0
+"ATM" , "gust"          , ""            , ""                             , "bicubic" ,  0.0
+"ICE" , "lw_flux_dn"    , "rlds"    , "./INPUT/RYF.rlds.1984_1985.nc"     , "bicubic" ,  1.0
+#"ICE" , "sw_flux_dn"    , "rsds"    ,"./INPUT/RYF.rsds.1984_1985.nc"     , "bicubic" ,  1.0
+"ICE" , "sw_flux_vis_dir_dn", "rsds", "./INPUT/RYF.rsds.1984_1985.nc"     , "bicubic" , 0.285
+"ICE" , "sw_flux_vis_dif_dn", "rsds", "./INPUT/RYF.rsds.1984_1985.nc"     , "bicubic" , 0.285
+"ICE" , "sw_flux_nir_dir_dn", "rsds", "./INPUT/RYF.rsds.1984_1985.nc"     , "bicubic" , 0.215
+"ICE" , "sw_flux_nir_dif_dn", "rsds", "./INPUT/RYF.rsds.1984_1985.nc"     , "bicubic" , 0.215
+"ICE" , "lprec"         , "prrn"        , "./INPUT/RYF.rain.1984_1985.nc"  , "bicubic" ,  1.0
+"ICE" , "fprec"         , "prsn"        , "./INPUT/RYF.snow.1984_1985.nc"  , "bicubic" ,  1.0
+"ICE" , "runoff"        , "RUNOFF"      , "./INPUT/RUNOFF.nc"            , "none"  ,  1.0
+"ICE" , "calving"       , ""            , ""                             , "none"  ,  0.0
+"ICE" , "dhdt"          , ""            , ""                             , "none"  ,  80.0
+"ICE" , "dedt"          , ""            , ""                             , "none"  ,  2.0e-6
+"ICE" , "drdt"          , ""            , ""                             , "none"  , 10.0
+"ICE", "sic_obs"        , "SIC"         ,"./INPUT/sst_ice_clim.nc"       , "bicubic" ,  0.00
+"ICE", "sit_obs"        , "SIT"         ,"./INPUT/sst_ice_clim.nc"       , "bicubic" ,  0.00
+"ICE", "sst_obs"        , "SST"         ,"./INPUT/sst_ice_clim.nc"       , "bicubic" ,  1.0
+"LND" , "t_surf"        , ""            , ""                             , "none"  ,  273.0
+"LND" , "t_ca"          , ""            , ""                             , "none"  ,  273.0
+"LND" , "q_ca"          , ""            , ""                             , "none"  ,  0.0
+"LND" , "rough_mom"     , ""            , ""                             , "none"  ,  0.01
+"LND" , "rough_heat"    , ""            , ""                             , "none"  ,  0.1
+"LND" , "albedo"        , ""            , ""                             , "none"  ,  0.1
+#"LND" , "t_ca"          , ""            , ""                             , "none"  ,  273.0
+#"LND" , "t_surf"        , ""            , ""                             , "none"  ,  273.0
+"LND" , "sphum_surf"    , ""            , ""                             , "none"  ,  0.0
+"LND" , "sphum_ca"      , ""            , ""                             , "none"  ,  0.0
+"LND" , "t_flux"        , ""            , ""                             , "none"  ,  0.0
+"LND" , "sphum_flux"    , ""            , ""                             , "none"  ,  0.0
+"LND" , "lw_flux"       , ""            , ""                             , "none"  ,  0.0
+"LND" , "sw_flux"       , ""            , ""                             , "none"  ,  0.0
+"LND" , "lprec"         , ""            , ""                             , "none"  ,  0.0
+"LND" , "fprec"         , ""            , ""                             , "none"  ,  0.0
+"LND" , "dhdt"          , ""            , ""                             , "none"  ,  5.0
+## check  dedt, dedsphum, dfdsphum
+"LND" , "dedt"          , ""            , ""                             , "none"  ,  2e-6
+"LND" , "dedsphum"      , ""            , ""                             , "none"  ,  0.0
+#"LND" ,	"dfdsphum"	, ""            , ""                	         , "none"  ,  2e-6  
+"LND" , "drdt"          , ""            , ""                             , "none"  ,  5.0
+"LND" , "drag_q"        , ""            , ""                             , "none"  ,  0.0
+"LND" , "p_surf"        , ""            , ""                             , "none"  ,  1.e5
