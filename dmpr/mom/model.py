@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Copyright 2017 ARC Centre of Excellence for Climate Systems Science
-# author: Scott Wales <scott.wales@unimelb.edu.au>
+# author: Aidan Heerdegen <aidan.heerdegen@anu.edu.au>
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,32 +14,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from __future__ import print_function
-from .um.model import UM
-from .mom.model import MOM
+from ..base import Model
+import netCDF4
 
-def identify_model(path):
+import shutil
+
+class MOM(Model):
     """
-    Identify the model under path
-
-    >>> identify_model('test/sample/um').name
-    'UM'
+    A MOM model run
     """
+    name = 'MOM'
 
-    if 'mom' in path:
-        return MOM()
-    elif 'um' in path:
-        return UM()
+    def __init__(self):
+        super(MOM,self).__init__()
+        self.run_meta['runid'] = 'tmp'
 
-def model_from_name(name):
-    """
-    Return the model object for a given name
-
-    >>> model_from_name('UM').name
-    'UM'
-    """
-    if name == UM.name:
-        return UM()
-    elif name == MOM.name:
-        return MOM()
-    else:
-        raise ArgumentError
+    def post_impl(self, infile, outfile):
+        shutil.copy(infile, outfile)
