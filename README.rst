@@ -41,17 +41,10 @@ Get help::
 
     dmpr --help
 
-Post process a model run::
+Convert output files to compressed CF-NetCDF::
 
-    dmpr post --rundir /path/to/configs output1 output2
+    dmpr standardise --model MOM --output cfoutput.nc output1.nc output2.nc
 
-List registered data management plans::
-
-    dmpr dmp list
-
-Export data management plan 51::
-
-    dmpr dmp export --format=json 51
 
 -------
 Develop
