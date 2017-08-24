@@ -15,9 +15,6 @@
 # limitations under the License.
 from __future__ import print_function
 from ..base import Model
-import netCDF4
-
-import shutil
 
 class MOM(Model):
     """

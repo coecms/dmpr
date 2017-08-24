@@ -29,7 +29,7 @@ class Model(object):
     used by command-line tools
     """
 
-    def standardise(self, infiles, outfile, **kwargs):
+    def standardise(self, infiles, outfile):
         """
         Convert the listed `infiles` to CF-NetCDF file `outfile`
 
