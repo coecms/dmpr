@@ -22,14 +22,9 @@ from dmpr.um.model import *
 import os
 import pytest
 import sys
-from pprint import PrettyPrinter
 from compliance_checker.suite import CheckSuite
 
 sampledir = os.path.join(os.path.dirname(os.path.realpath(__file__)),'sample')
-
-@pytest.fixture(scope='module')
-def pprinter():
-    return PrettyPrinter(stream=sys.stderr)
 
 @pytest.fixture(scope='module')
 def archivedir(tmpdir_factory):
@@ -50,12 +45,17 @@ def standardised(archivedir):
 def test_standardise_exists(standardised):
     assert os.path.isfile(standardised)
 
-def test_standardise_cf(standardised, pprinter):
+def test_standardise_cf(standardised):
     suite = CheckSuite()
     suite.load_all_available_checkers()
 
     ds = suite.load_dataset(standardised)
     results = suite.run(ds, [], 'cf')
 
-    pprinter.pprint(results['cf'][0])
-    assert results['cf'][0] is []
+    check_failures = 0
+    for r in results['cf'][0]:
+        if r.value[1] - r.value[0] > 0:
+            print(r, file=sys.stderr)
+            check_failures += 1
+
+    assert check_failures == 0
