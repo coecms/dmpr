@@ -18,66 +18,44 @@ limitations under the License.
 """
 
 from dmpr.um.model import *
-from dmpr.model import identify_model
 
 import os
-import netCDF4
 import pytest
+import sys
+from pprint import PrettyPrinter
+from compliance_checker.suite import CheckSuite
 
-sample = os.path.join(os.path.dirname(os.path.realpath(__file__)),'sample')
+sampledir = os.path.join(os.path.dirname(os.path.realpath(__file__)),'sample')
 
-def test_identify_model():
-    assert isinstance(identify_model(sample), UM)
-    
-def test_read_config():
-    model = UM()
-    model.read_configs(sample)
-    assert model.run_meta['runid'] == 'abcde'
+@pytest.fixture(scope='module')
+def pprinter():
+    return PrettyPrinter(stream=sys.stderr)
 
 @pytest.fixture(scope='module')
 def archivedir(tmpdir_factory):
     return str(tmpdir_factory.mktemp('um'))
 
 @pytest.fixture(scope='module')
-def sample_out(archivedir):
-    """
-    Returns a processed output file
-    """
+def standardised(archivedir):
     model = UM()
-    model.read_configs(sample)
-    model.archivedir = archivedir
 
-    infile = os.path.join(sample, 'abcdea_da000')
-    outfile = model.post(infile)
+    outfile = os.path.join(archivedir, 'abcdea_da000.nc')
+
+    model.standardise(
+            [os.path.join(sampledir, 'abcdea_da000')],
+            outfile)
+
     return outfile
 
-def test_metadata(sample_out):
-    with netCDF4.Dataset(sample_out) as d:
-        # There is a history present
-        assert d.getncattr('history') is not None
+def test_standardise_exists(standardised):
+    assert os.path.isfile(standardised)
 
-def test_cfcheck(sample_out, cfchecker):
-    # Output is CF compliant
-    assert cfchecker.checker(sample_out) == 0
+def test_standardise_cf(standardised, pprinter):
+    suite = CheckSuite()
+    suite.load_all_available_checkers()
 
-@pytest.fixture(scope='module')
-def sample_dmp(archivedir, dmp):
-    """
-    Returns a processed output file
-    """
-    model = UM()
-    model.read_configs(sample)
-    model.archivedir = archivedir
-    model.dmp = dmp
+    ds = suite.load_dataset(standardised)
+    results = suite.run(ds, [], 'cf')
 
-    infile = os.path.join(sample, 'abcdea_da000')
-    outfile = model.post(infile, 'abcdea_da000.dmp.nc')
-    return outfile
-
-def test_metadata_dmp(sample_dmp):
-    with netCDF4.Dataset(sample_dmp) as d:
-        assert d.getncattr('data_management_plan') is not None
-
-def test_cfcheck_dmp(sample_dmp, cfchecker):
-    # Output is CF compliant
-    assert cfchecker.checker(sample_dmp) == 0
+    pprinter.pprint(results['cf'][0])
+    assert results['cf'][0] is []

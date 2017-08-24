@@ -15,51 +15,25 @@
 # limitations under the License.
 from __future__ import print_function
 import click
-from .model import identify_model, model_from_name
-from .dmp import dmpcli
-from .dmponline import default_server
+from .model import model_from_name
 
 @click.group()
-def main():
+def dmpr():
     """
     ARCCSS Data Publication Tools
     """
     pass
 
-@main.command()
-@click.option('-r','--rundir', prompt=True)
-@click.option('-m','--model')
-@click.option('--dmp')
-@click.option('--server', default = default_server)
-@click.argument('file', nargs=-1)
-def post(dmp, model, rundir, server, file):
+@dmpr.command()
+@click.option('--output', help='Output filename')
+@click.option('--model', help='Model Type', type=click.Choice(['UM','MOM','CABLE','WRF']))
+@click.argument('inputs', nargs=1, type=click.Path(exists=True))
+def standardise(output, model, inputs):
     """
-    Post-process climate data files
+    Convert model output to CF-NetCDF format
 
-    If model is not specified it will be determined from the run directory
+        INPUTS: Model files
     """
+    m = model_from_name(model)
+    m.standardise(inputs, output)
     
-    # Identify the model type
-    if model is not None:
-        m = model_from_name(model)
-    else:
-        m = identify_model(rundir)
-    m.read_configs(rundir)
-
-    # Set the DMP if present
-    if dmp is not None:
-        m.run_meta['data-management-plan'] = '%s/projects/%s'%(server, dmp)
-
-    # Process the files
-    for f in file:
-        newfile = m.post(f)
-        print(newfile)
-
-@main.command()
-def stage():
-    """
-    Stage a run for publication, checking metadata and moving to ua8
-    """
-    pass
-
-main.add_command(dmpcli)

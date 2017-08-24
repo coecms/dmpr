@@ -18,7 +18,6 @@ from ..base import Model
 import iris
 import iris.fileformats.netcdf
 import os
-import re
 import netCDF4
 
 class UM(Model):
@@ -30,34 +29,16 @@ class UM(Model):
     def __init__(self):
         super(UM,self).__init__()
 
-    def read_configs(self, rundir):
+    def standardise(self, infiles, outfile):
         """
-        Read the UM namelists and set up metadata
+        Convert to CF-NetCDF using Iris
         """
-        runid_re = re.compile('^\s*RUNID=(.*)$')
-
-        with open(os.path.join(rundir, 'SUBMIT')) as f:
-            for line in f:
-                m = runid_re.match(line)
-                if m is not None:
-                    self.run_meta['runid'] = m.group(1)
-
-
-    def out_filename(self, infile):
-        """
-        TODO: Decode UM file name
-        """
-        return os.path.basename(infile) + '.nc'
-
-    def post_impl(self, infile, outfile):
-        """
-        Convert file using Iris
-        """
-        cubes = iris.load(infile)
-        iris.fileformats.netcdf.save(cubes, outfile)
-
+        cubes = iris.load(infiles)
+        iris.fileformats.netcdf.save(cubes, outfile, zlib=True)
+        
         # Cleanup CF compliance
         with netCDF4.Dataset(outfile, mode="a") as d:
             if 'level_height' in d.variables:
                 v = d.variables['level_height']
                 v.delncattr('axis')
+

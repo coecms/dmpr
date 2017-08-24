@@ -23,11 +23,7 @@ class MOM(Model):
     """
     A MOM model run
     """
-    name = 'MOM'
 
     def __init__(self):
         super(MOM,self).__init__()
-        self.run_meta['runid'] = 'tmp'
 
-    def post_impl(self, infile, outfile):
-        shutil.copy(infile, outfile)

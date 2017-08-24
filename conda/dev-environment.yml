@@ -14,3 +14,5 @@ dependencies:
     - beautifulsoup4
     - tabulate
     - click
+    - compliance-checker
+    - xarray
