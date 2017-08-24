@@ -1,9 +1,0 @@
-name: dmpr-dev
-
-channels:
-    - ScottWales # For fixed cfchecker
-    - conda-forge
-    - defaults
-
-dependencies:
-    - cfchecker
