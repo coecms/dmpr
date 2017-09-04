@@ -21,11 +21,12 @@ requirements:
         - six
         - netcdf4
         - iris
-        - cfchecker # [py27]
         - requests
         - beautifulsoup4
         - tabulate
         - click
+        - xarray
+        - compliance-checker
 
 test:
     source_files:

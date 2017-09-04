@@ -15,19 +15,12 @@
 # limitations under the License.
 from __future__ import print_function
 from ..base import Model
-import netCDF4
-
-import shutil
 
 class MOM(Model):
     """
     A MOM model run
     """
-    name = 'MOM'
 
     def __init__(self):
         super(MOM,self).__init__()
-        self.run_meta['runid'] = 'tmp'
 
-    def post_impl(self, infile, outfile):
-        shutil.copy(infile, outfile)

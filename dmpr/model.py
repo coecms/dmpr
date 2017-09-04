@@ -17,19 +17,6 @@ from __future__ import print_function
 from .um.model import UM
 from .mom.model import MOM
 
-def identify_model(path):
-    """
-    Identify the model under path
-
-    >>> identify_model('test/sample/um').name
-    'UM'
-    """
-
-    if 'mom' in path:
-        return MOM()
-    elif 'um' in path:
-        return UM()
-
 def model_from_name(name):
     """
     Return the model object for a given name
