@@ -2,9 +2,8 @@
 Design
 ======
 
-------------
 Requirements
-------------
+============
 
  * Use a common tool for all models supported by the Centre
 
@@ -14,7 +13,6 @@ Requirements
 
  * Ensure CF compliance
 
-========
 Design 1
 ========
 
