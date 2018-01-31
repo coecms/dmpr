@@ -5,7 +5,7 @@ dmpr
 ARCCSS Data Publication Tool
 
 .. image:: https://readthedocs.org/projects/dmpr/badge/?version=latest
-  :target: https://readthedocs.org/projects/dmpr/?badge=latest
+  :target: https://dmpr.readthedocs.io/en/latest
 .. image:: https://travis-ci.org/coecms/dmpr.svg?branch=master
   :target: https://travis-ci.org/coecms/dmpr
 .. image:: https://circleci.com/gh/coecms/dmpr.svg?style=shield
@@ -18,6 +18,8 @@ ARCCSS Data Publication Tool
   :target: https://codeclimate.com/github/coecms/dmpr
 .. image:: https://badge.fury.io/py/dmpr.svg
   :target: https://pypi.python.org/pypi/dmpr
+
+`Current Documentation <http://dmpr.readthedocs.io/en/stable/>`_
 
 .. content-marker-for-sphinx
 
