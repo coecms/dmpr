@@ -57,7 +57,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'dmpr'
-copyright = u'2016, Scott Wales'
+copyright = u'2017-2018, ARC Centre of Excellence for Climate Systems Science'
 author = u'Scott Wales'
 
 # Access project metadata
